@@ -1,14 +1,22 @@
 <template>
-  <SettingsPane />
-  <div>test</div>
+  <HeaderPane />
+  <div id="column-wrapper">
+    <div class="column settings">
+      <SettingsPane />
+    </div>
+    <div class="column preview">preview</div>
+    <div class="column curve">curve</div>
+  </div>
 </template>
 
 <script>
+import HeaderPane from "./components/HeaderPane"
 import SettingsPane from "./components/SettingsPane"
 
 export default {
   name: 'App',
   components: {
+    HeaderPane,
     SettingsPane
   }
 }
@@ -27,6 +35,13 @@ export default {
   src: url("./assets/rajdhani-v15-latin-300.woff2") format("woff2 "),
   url("./assets/rajdhani-v15-latin-300.woff2") format("woff2");
   font-weight: 300;
+}
+@font-face {
+  font-family: "Rajdhani";
+  font-style: normal;
+  src: url("./assets/rajdhani-v15-latin-600.woff2") format("woff2 "),
+  url("./assets/rajdhani-v15-latin-600.woff2") format("woff2");
+  font-weight: 600;
 }
 
 * {
@@ -47,12 +62,34 @@ body {
 html, body {
   height: 100%;
 }
+button, input, optgroup, select, textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 #app {
   display: flex;
   flex-direction: column;
   background: #121212;
   border-radius: 4px;
-  width: 1000px;
+  width: 1200px;
   height: 600px;
+}
+#column-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  padding: 12px;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-right: 20px;
+  &.settings {
+    max-width: 300px;
+  }
 }
 </style>
