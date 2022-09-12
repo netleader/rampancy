@@ -1,66 +1,112 @@
 <template>
-  <div class="section-wrapper">
-    <div class="section-title">Colors</div>
-    
-    <div class="row">
-      <label for="inputBaseColor" class="col-form-label">Base Color</label>
-      <div class="form-input-col">
-        <div class="color-preview"></div>
-        <input type="text" class="form-control" id="inputBaseColor" maxlength="7" spellcheck="false" autocomplete="off">
+  <form @submit.prevent="onSubmit">
+    <div class="section-wrapper">
+      <div class="section-title">Generic</div>
+  
+      <div class="row">
+        <label for="inputName" class="col-form-label">Name</label>
+        <div class="form-input-col">
+          <input v-model="name" type="text" class="form-control" id="inputName" spellcheck="false" autocomplete="off">
+        </div>
       </div>
-    </div>
-
-    <div class="row">
-      <label for="inputForegroundLightColor" class="col-form-label">Foreground Light</label>
-      <div class="form-input-col">
-        <div class="color-preview"></div>
-        <input type="text" class="form-control" id="inputForegroundLightColor" maxlength="7" spellcheck="false" autocomplete="off">
-      </div>
-    </div>
-
-    <div class="row">
-      <label for="inputForegroundDarkColor" class="col-form-label">Foreground Dark</label>
-      <div class="form-input-col">
-        <div class="color-preview"></div>
-        <input type="text" class="form-control" id="inputForegroundDarkColor" maxlength="7" spellcheck="false" autocomplete="off">
-      </div>
+  
     </div>
     
-  </div>
-  <div class="section-wrapper">
-    <div class="section-title">Amount</div>
-
-    <div class="row">
-      <label for="inputAmountShades" class="col-form-label">Shades</label>
-      <div class="form-input-col">
-        <input type="number" class="form-control" id="inputAmountShades" maxlength="2" min="2" max="7" spellcheck="false" autocomplete="off">
+    <div class="section-wrapper">
+      <div class="section-title">Colors</div>
+      
+      <div class="row">
+        <label for="inputBaseColor" class="col-form-label">Base Color</label>
+        <div class="form-input-col">
+          <div class="color-preview" :style="{ backgroundColor: baseColor }"></div>
+          <input v-model="baseColor" type="text" class="form-control" id="inputBaseColor" maxlength="7" spellcheck="false" autocomplete="off">
+        </div>
       </div>
-    </div>
-    
-    <div class="row">
-      <label for="inputAmountTints" class="col-form-label">Tints</label>
-      <div class="form-input-col">
-        <input type="number" class="form-control" id="inputAmountTints" maxlength="2" min="2" max="6" spellcheck="false" autocomplete="off">
+  
+      <div class="row">
+        <label for="inputForegroundLightColor" class="col-form-label">Light Check Color</label>
+        <div class="form-input-col">
+          <div class="color-preview" :style="{ backgroundColor: lightCheckColor }"></div>
+          <input v-model="lightCheckColor" type="text" class="form-control" id="inputForegroundLightColor" maxlength="7" spellcheck="false" autocomplete="off">
+        </div>
       </div>
+  
+      <div class="row">
+        <label for="inputForegroundDarkColor" class="col-form-label">Dark Check Color</label>
+        <div class="form-input-col">
+          <div class="color-preview" :style="{ backgroundColor: darkCheckColor }"></div>
+          <input v-model="darkCheckColor" type="text" class="form-control" id="inputForegroundDarkColor" maxlength="7" spellcheck="false" autocomplete="off">
+        </div>
+      </div>
+      
     </div>
-    
-  </div>
+    <div class="section-wrapper">
+      <div class="section-title">Amount</div>
+  
+      <div class="row">
+        <label for="inputAmountShades" class="col-form-label">Shades</label>
+        <div class="form-input-col">
+          <input v-model="countShades" type="number" class="form-control" id="inputAmountShades" maxlength="2" min="2" max="7" spellcheck="false" autocomplete="off">
+        </div>
+      </div>
+      
+      <div class="row">
+        <label for="inputAmountTints" class="col-form-label">Tints</label>
+        <div class="form-input-col">
+          <input v-model="countTints" type="number" class="form-control" id="inputAmountTints" maxlength="2" min="2" max="6" spellcheck="false" autocomplete="off">
+        </div>
+      </div>
+      
+    </div>
+    <button type="submit" class="btn btn-primary">Calculate</button>
+  </form>
 </template>
 
-<script>
-export default {
-  name: "SettingsPane"
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useMainStore } from '@/stores/main'
+
+const mainStore = useMainStore()
+const name = ref(mainStore.name)
+const baseColor = ref(mainStore.baseColor)
+const lightCheckColor = ref(mainStore.lightCheckColor)
+const darkCheckColor = ref(mainStore.darkCheckColor)
+const countShades = ref(mainStore.countShades)
+const countTints = ref(mainStore.countTints)
+
+onMounted(() => {
+  console.log('myheader mounted');
+})
+
+function onSubmit(e) {
+  console.log('myheader' + e);
 }
+
 </script>
 
 <style lang="scss" scoped>
 $border-color: #3a3a3a;
 
+.btn {
+  border: none;
+  border-radius: 2px;
+  padding: 8px 20px;
+  width: 100%;
+  &-primary {
+    color: white;
+    background-color: #bf2900;
+    &:hover {
+      background-color: #ee3500;
+      cursor: pointer;
+    }
+  }
+}
 .section-wrapper {
   width: 100%;
+  margin-bottom: 20px;
 }
 .section-title {
-  color: #ee3500;
+  color: #e7e7e7;
   font-family: Rajdhani, sans-serif;
   font-size: 1.4rem;
   text-transform: uppercase;
@@ -73,6 +119,7 @@ $border-color: #3a3a3a;
   margin-bottom: 12px;
 }
 .col-form-label {
+  color: #666;
   margin-bottom: 0;
   font-size: inherit;
   line-height: 1.5;
@@ -106,6 +153,7 @@ $border-color: #3a3a3a;
   appearance: none;
   border-radius: 0;
   &:focus {
+    border-color: lighten($border-color, 20%);
     outline: none ;
   }
 }

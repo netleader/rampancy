@@ -4,22 +4,20 @@
     <div class="column settings">
       <SettingsPane />
     </div>
-    <div class="column preview">preview</div>
+    <div class="column preview">
+      <color-ramp-part />
+      <color-ramp-part />
+    </div>
     <div class="column curve">curve</div>
   </div>
 </template>
 
-<script>
+<script setup>
 import HeaderPane from "./components/HeaderPane"
 import SettingsPane from "./components/SettingsPane"
+import ColorRampPart from "@/components/ColorRampPart"
 
-export default {
-  name: 'App',
-  components: {
-    HeaderPane,
-    SettingsPane
-  }
-}
+
 </script>
 
 <style lang="scss">
@@ -52,15 +50,11 @@ html {
 }
 body {
   display: flex;
-  align-items: center;
   justify-content: center;
   color: white;
   background: #080808;
   font: 1em/1.375 FiraCode,arial,sans-serif;
   margin: 0;
-}
-html, body {
-  height: 100%;
 }
 button, input, optgroup, select, textarea {
   margin: 0;
@@ -73,9 +67,8 @@ button, input, optgroup, select, textarea {
   display: flex;
   flex-direction: column;
   background: #121212;
-  border-radius: 4px;
   width: 1200px;
-  height: 600px;
+  height: 100vh;
 }
 #column-wrapper {
   display: flex;
@@ -88,8 +81,16 @@ button, input, optgroup, select, textarea {
   flex-direction: column;
   flex-grow: 1;
   margin-right: 20px;
+  padding-top: 12px;
   &.settings {
     max-width: 300px;
   }
+  &.preview {
+    max-width: 440px;
+  }
+}
+.column:not(:last-of-type) {
+  padding-right: 20px;
+  border-right: 1px solid #202020;
 }
 </style>

@@ -11,12 +11,6 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "HeaderPane"
-}
-</script>
-
 <style lang="scss" scoped>
 .title {
   margin-right: 40px;
@@ -59,7 +53,7 @@ export default {
   }
   .pane-wrapper {
     display: flex;
-    border-bottom: 1px solid #080808;
-    padding: 12px;
+    justify-content: center;
+    padding: 40px 0 40px;
   }
 </style>
