@@ -1,9 +1,9 @@
 <template>
-  <div class="color">
+  <div class="color" :style="{ backgroundColor: color.hex}">
     <div class="wrapper">
-      <div class="id">500</div>
-      <div class="hex">#42b983</div>
-      <div class="token">color-red-500</div>
+      <div class="id">{{ color.id }}</div>
+      <div class="hex">{{ color.hex }}</div>
+      <div class="token">{{ color.token }}</div>
     </div>
     <div class="spacer"></div>
     <div class="contrast-wrapper">
@@ -28,6 +28,15 @@
 </template>
 
 <script setup>
+import {defineProps, onMounted} from 'vue'
+
+defineProps({
+  color: Object
+})
+
+onMounted(() => {
+  console.log("tinycolor")
+})
 
 </script>
 
@@ -92,6 +101,7 @@
   }
   & > .hex, & > .token {
     font-size: 10px;
+    text-transform: lowercase;
     line-height: 1.1;
     opacity: 0.6;
   }

@@ -13,6 +13,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.1",
     "core-js": "^3.8.3",
     "pinia": "^2.0.22",
+    "tinycolor2": "^1.4.2",
     "vue": "^3.2.13"
   },
   "devDependencies": {

@@ -2,13 +2,14 @@
   <HeaderPane />
   <div id="column-wrapper">
     <div class="column settings">
-      <SettingsPane />
+      <SettingsPane @onCalculate="calculateColors" />
     </div>
-    <div class="column preview">
-      <color-ramp-part />
-      <color-ramp-part />
+    <div class="column preview" v-if="isCalculated">
+      <color-ramp-part 
+          v-for="color in mainStore.colors" :key="color.id" 
+          :color="color" />
     </div>
-    <div class="column curve">curve</div>
+    <div class="column curve" v-if="isCalculated">curve</div>
   </div>
 </template>
 
@@ -16,8 +17,16 @@
 import HeaderPane from "./components/HeaderPane"
 import SettingsPane from "./components/SettingsPane"
 import ColorRampPart from "@/components/ColorRampPart"
+import { useMainStore } from '@/stores/main'
+import { ref } from "vue";
 
+const mainStore = useMainStore()
+const isCalculated = ref(false)
 
+function calculateColors() {
+  mainStore.calculateColors()
+  isCalculated.value = true
+}
 </script>
 
 <style lang="scss">
@@ -52,7 +61,7 @@ body {
   display: flex;
   justify-content: center;
   color: white;
-  background: #080808;
+  background: #000;
   font: 1em/1.375 FiraCode,arial,sans-serif;
   margin: 0;
 }
@@ -66,7 +75,7 @@ button, input, optgroup, select, textarea {
 #app {
   display: flex;
   flex-direction: column;
-  background: #121212;
+  background: #000;
   width: 1200px;
   height: 100vh;
 }

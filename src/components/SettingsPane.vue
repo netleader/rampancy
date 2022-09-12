@@ -6,7 +6,7 @@
       <div class="row">
         <label for="inputName" class="col-form-label">Name</label>
         <div class="form-input-col">
-          <input v-model="name" type="text" class="form-control" id="inputName" spellcheck="false" autocomplete="off">
+          <input v-model="settings.name" type="text" class="form-control" id="inputName" spellcheck="false" autocomplete="off">
         </div>
       </div>
   
@@ -18,24 +18,24 @@
       <div class="row">
         <label for="inputBaseColor" class="col-form-label">Base Color</label>
         <div class="form-input-col">
-          <div class="color-preview" :style="{ backgroundColor: baseColor }"></div>
-          <input v-model="baseColor" type="text" class="form-control" id="inputBaseColor" maxlength="7" spellcheck="false" autocomplete="off">
+          <div class="color-preview" :style="{ backgroundColor: settings.baseColor }"></div>
+          <input v-model="settings.baseColor" type="text" class="form-control" id="inputBaseColor" maxlength="7" spellcheck="false" autocomplete="off">
         </div>
       </div>
   
       <div class="row">
         <label for="inputForegroundLightColor" class="col-form-label">Light Check Color</label>
         <div class="form-input-col">
-          <div class="color-preview" :style="{ backgroundColor: lightCheckColor }"></div>
-          <input v-model="lightCheckColor" type="text" class="form-control" id="inputForegroundLightColor" maxlength="7" spellcheck="false" autocomplete="off">
+          <div class="color-preview" :style="{ backgroundColor: settings.lightCheckColor }"></div>
+          <input v-model="settings.lightCheckColor" type="text" class="form-control" id="inputForegroundLightColor" maxlength="7" spellcheck="false" autocomplete="off">
         </div>
       </div>
   
       <div class="row">
         <label for="inputForegroundDarkColor" class="col-form-label">Dark Check Color</label>
         <div class="form-input-col">
-          <div class="color-preview" :style="{ backgroundColor: darkCheckColor }"></div>
-          <input v-model="darkCheckColor" type="text" class="form-control" id="inputForegroundDarkColor" maxlength="7" spellcheck="false" autocomplete="off">
+          <div class="color-preview" :style="{ backgroundColor: settings.darkCheckColor }"></div>
+          <input v-model="settings.darkCheckColor" type="text" class="form-control" id="inputForegroundDarkColor" maxlength="7" spellcheck="false" autocomplete="off">
         </div>
       </div>
       
@@ -46,14 +46,14 @@
       <div class="row">
         <label for="inputAmountShades" class="col-form-label">Shades</label>
         <div class="form-input-col">
-          <input v-model="countShades" type="number" class="form-control" id="inputAmountShades" maxlength="2" min="2" max="7" spellcheck="false" autocomplete="off">
+          <input v-model="settings.countShades" type="number" class="form-control" id="inputAmountShades" maxlength="2" min="2" max="7" spellcheck="false" autocomplete="off">
         </div>
       </div>
       
       <div class="row">
         <label for="inputAmountTints" class="col-form-label">Tints</label>
         <div class="form-input-col">
-          <input v-model="countTints" type="number" class="form-control" id="inputAmountTints" maxlength="2" min="2" max="6" spellcheck="false" autocomplete="off">
+          <input v-model="settings.countTints" type="number" class="form-control" id="inputAmountTints" maxlength="2" min="2" max="6" spellcheck="false" autocomplete="off">
         </div>
       </div>
       
@@ -63,25 +63,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, defineEmits } from 'vue'
 import { useMainStore } from '@/stores/main'
 
 const mainStore = useMainStore()
-const name = ref(mainStore.name)
-const baseColor = ref(mainStore.baseColor)
-const lightCheckColor = ref(mainStore.lightCheckColor)
-const darkCheckColor = ref(mainStore.darkCheckColor)
-const countShades = ref(mainStore.countShades)
-const countTints = ref(mainStore.countTints)
+const settings = ref(mainStore.settings)
+const emit = defineEmits(['onCalculate'])
 
-onMounted(() => {
-  console.log('myheader mounted');
-})
-
-function onSubmit(e) {
-  console.log('myheader' + e);
+function onSubmit() {
+  emit('onCalculate')
 }
-
 </script>
 
 <style lang="scss" scoped>
@@ -94,9 +85,9 @@ $border-color: #3a3a3a;
   width: 100%;
   &-primary {
     color: white;
-    background-color: #bf2900;
+    background-color: #222;
     &:hover {
-      background-color: #ee3500;
+      background-color: #333;
       cursor: pointer;
     }
   }
@@ -145,6 +136,7 @@ $border-color: #3a3a3a;
   width: 100%;
   line-height: 1.5;
   padding: .375rem .75rem;
+  text-transform: lowercase;
 
   color: #ccc;
   background-color: transparent;
