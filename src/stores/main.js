@@ -81,6 +81,10 @@ export const useMainStore = defineStore('main', {
             ramp.forEach ((color) => {
                 color.id = totalColorCount * 100
                 color.token = `color-${this.settings.name}-${color.id}`
+
+                color.lightness = tinycolor(color.hex).toHsl().l * 100
+                color.saturation = tinycolor(color.hex).toHsl().s * 100
+                
                 color.contrastLight = Number(tinycolor.readability(color.hex, this.settings.lightCheckColor)).toFixed(1)
                 color.contrastDark = Number(tinycolor.readability(color.hex, this.settings.darkCheckColor)).toFixed(1)
 
@@ -102,6 +106,6 @@ export const useMainStore = defineStore('main', {
             const tints = calculateTintRamp(this.settings.name, this.settings.baseColor, this.totalColors, this.settings.minTintFactor/10, this.settings.maxTintFactor/10, this.settings.countTints)
             
             this.colors = this.getColorInfos(base.concat(tints))
-        },
+        }
     },
 })

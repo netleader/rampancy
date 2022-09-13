@@ -1,9 +1,15 @@
 <template>
   <div class="container">
-    
     <div class="grid-wrapper">
       <div class="grid">
-        <div class="test"></div>
+        <div 
+            v-for="color in colors" :key="color.id"
+            :style="{ 
+              backgroundColor: color.hex, 
+              top: color.lightness + '%',
+              left: getSaturationPosition(color.saturation)
+            }"
+            class="test" ></div>
       </div>
       <div class="right">
         <div>0</div>
@@ -20,6 +26,15 @@
 </template>
 
 <script setup>
+import { useMainStore } from '@/stores/main'
+import { ref } from "vue";
+
+const mainStore = useMainStore()
+const colors = ref(mainStore.colors)
+
+function getSaturationPosition(saturation) {
+  return `calc(${saturation}% - 8px)`
+}
 
 </script>
 
@@ -52,9 +67,9 @@ $grid-box-size: 35px;
 }
 .test {
   position: absolute;
-  height: 20px;
-  width: 20px;
-  background: red;
+  height: 16px;
+  width: 16px;
+  border-radius: 8px;
 }
 .grid {
   position: relative;
@@ -62,8 +77,8 @@ $grid-box-size: 35px;
   height: $grid-width;
   background-size: $grid-box-size $grid-box-size;
   background-image:
-      linear-gradient(to right, #3a3a3a 1px, transparent 1px),
-      linear-gradient(to bottom, #3a3a3a 1px, transparent 1px);
+      linear-gradient(to right, #282828 1px, transparent 1px),
+      linear-gradient(to bottom, #282828 1px, transparent 1px);
   &-wrapper {
     display: flex;
 
