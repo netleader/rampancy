@@ -7,16 +7,19 @@
     </div>
     <div class="spacer"></div>
     <div class="contrast-wrapper">
+      
       <div class="contrast light foreground" :style="[color.contrastLight < maxAllowedContrast ? 'opacity: .3': '']">
-        <font-awesome-icon v-if="color.contrastLight >= maxAllowedContrast" :style="{ color: lightCheckColor}" class="icon" icon="fa-solid fa-check" />
+        <font-awesome-icon v-if="color.contrastLight >= maxAllowedContrast" :style="{ color: lightCheckColor }" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: lightCheckColor }">{{ color.contrastLight}}</div>
+        <div class="rating" :style="{ color: lightCheckColor }">{{ color.contrastLight }}</div>
       </div>
+      
       <div class="contrast dark foreground" :style="[color.contrastDark < maxAllowedContrast ? 'opacity: .3': '']">
-        <font-awesome-icon v-if="color.contrastDark>= maxAllowedContrast" :style="{ color: darkCheckColor}" class="icon" icon="fa-solid fa-check" />
+        <font-awesome-icon v-if="color.contrastDark >= maxAllowedContrast" :style="{ color: darkCheckColor}" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: darkCheckColor }">{{ color.contrastDark}}</div>
+        <div class="rating" :style="{ color: darkCheckColor }">{{ color.contrastDark }}</div>
       </div>
+      
     </div>
   </div>
 </template>
@@ -68,12 +71,17 @@ const getForegroundColor = computed(() => {
   justify-content: left;
   border-radius: 3px;
   padding: 2px 6px;
-  width: 60px;
+  width: 56px;
 
   &.foreground {
     border: 1px solid rgba(white, 10%);
   }
 
+  .rating {
+    font-size: 10px;
+    line-height: 2;
+  }
+  
   & > .icon {
     margin-right: 4px;
   }

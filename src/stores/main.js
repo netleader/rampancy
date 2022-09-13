@@ -53,7 +53,7 @@ export const useMainStore = defineStore('main', {
     state: () => ({
         settings: {
             name: "blue",
-            baseColor: "#4199fa",
+            baseColor: "#1272b3",
             lightCheckColor: "#f4f4f4",
             darkCheckColor: "#141414",
             countShades: 5,
@@ -83,7 +83,14 @@ export const useMainStore = defineStore('main', {
                 color.token = `color-${this.settings.name}-${color.id}`
                 color.contrastLight = Number(tinycolor.readability(color.hex, this.settings.lightCheckColor)).toFixed(1)
                 color.contrastDark = Number(tinycolor.readability(color.hex, this.settings.darkCheckColor)).toFixed(1)
-                color.contrastLightPercentage = this.ratioToPercentage(color.contrastLight)
+
+                // const contrast = Number(tinycolor.readability(this.settings.darkCheckColor, color.hex)).toFixed(2)
+                // let percentage = 100 - this.ratioToPercentage(contrast)
+                // color.contrastDarkPercentage = Math.round(percentage)
+                //
+                // let LL1 = tinycolor(this.settings.lightCheckColor).getLuminance()
+                // let LL2 = tinycolor(color.hex).getLuminance()
+                // color.contrastLightPercentage = Math.round((LL1 - LL2) * 100 / LL1)
                 
                 totalColorCount--
             });
