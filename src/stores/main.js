@@ -1,22 +1,71 @@
 import { defineStore } from 'pinia'
 const tinycolor = require("tinycolor2");
 
-function calculateTint(hex, value) {
+function calculateColorTint(hex, tintFactor) {
     const color = tinycolor(hex).toRgb()
-    const red = color.r + ((255 - color.r) * value)
-    const green = color.g + ((255 - color.g) * value)
-    const blue = color.b + ((255 - color.b) * value)
-    console.log(value)
-
+    const red = color.r + ((255 - color.r) * tintFactor)
+    const green = color.g + ((255 - color.g) * tintFactor)
+    const blue = color.b + ((255 - color.b) * tintFactor)
+    console.log(tintFactor)
     return tinycolor({r: red, g: green, b: blue}).toHexString()
 }
 
-function calculateShade(hex, value) {
+function calculateColorShade(hex, shadeFactor) {
     const color = tinycolor(hex).toRgb()
-    const red = color.r * value
-    const green = color.g * value
-    const blue = color.b * value
+    const red = color.r * shadeFactor
+    const green = color.g * shadeFactor
+    const blue = color.b * shadeFactor
+    
     return tinycolor({r: red, g: green, b: blue}).toHexString()
+}
+
+function calculateStepValue(min, max, points) {
+    const spacing = (max - min) / (points - 1)
+    return Number(spacing.toFixed(3));
+}
+
+function calculateShadeRamp(name, baseColor, totalColors, minShadeFactor, totalShades) {
+    const result = []
+    let previewsId = (totalColors * 100) + 100;
+    const shadeFactorStep = calculateStepValue(minShadeFactor, .8, totalShades)
+
+    for (let i = totalShades-1; i >= 0; i--) {
+        let newId = previewsId - 100
+        result[i] = {
+            id: newId,
+            hex: calculateColorShade(baseColor, minShadeFactor),
+            token: "color-" + name + "-" + newId
+        }
+        previewsId = newId
+        minShadeFactor = shadeFactorStep + minShadeFactor
+    }
+    return result.reverse()
+}
+
+function calculateTintRamp(name, baseColor, totalColors, minTintFactor, maxTintFactor, totalTints) {
+    const result = []
+    let x = 0.75
+
+    const tintFactorStep = calculateStepValue(minTintFactor, maxTintFactor, totalTints)
+    
+    for (let i = 0; i < totalTints; i++) {
+        let newId = (i+1) * 100
+        result[i] = {
+            id: newId,
+            hex: calculateColorTint(baseColor, tintFactorStep),
+            token: "color-" + name + "-" + newId
+        }
+        x = x - ((8 / totalTints) / 10)
+    }
+    return result.reverse()
+}
+
+function generateBaseColorInfo(id, name, baseColor) {
+    return {
+        id,
+        hex: baseColor,
+        token: "color-" + name + "-" + id
+    }
 }
 
 export const useMainStore = defineStore('main', {
@@ -35,46 +84,11 @@ export const useMainStore = defineStore('main', {
         totalColors: (state) => state.settings.countShades + state.settings.countTints + 1,
     },
     actions: {
-        clear() {
-          this.colors = []  
-        },
-        calculateColors() {
-            const result = []
-            let previewsId = (this.totalColors * 100) + 100;
-            let a = 0.2
-            for (let i = this.settings.countShades-1; i >= 0; i--) {
-                let newId = previewsId - 100
-                result[i] = {
-                    id: newId,
-                    hex: calculateShade(this.settings.baseColor, a),
-                    token: "color-" + this.settings.name + "-" + newId
-                }
-                previewsId = newId
-                a = a + (8 / this.settings.countShades) / 10
-            }
-            const shades = result.reverse()
-
-            previewsId = previewsId - 100
-            const baseColor = {
-                id: previewsId,
-                hex: this.settings.baseColor,
-                token: "color-" + this.settings.name + "-" + previewsId
-            }
-            const shadesWithBase = shades.concat(baseColor)
-
-            let tempTints = []
-            let x = 0.75
-            for (let i = 0; i < this.settings.countTints; i++) {
-                let newId = (i+1) * 100
-                tempTints[i] = {
-                    id: newId,
-                    hex: calculateTint(this.settings.baseColor, x),
-                    token: "color-" + this.settings.name + "-" + newId
-                }
-                previewsId = newId
-                x = x - ((8 / this.settings.countTints) / 10)
-            }
-            this.colors = shadesWithBase.concat(tempTints.reverse())
+        calculateRamp() {
+            const shades = calculateShadeRamp(this.settings.name, this.settings.baseColor, this.totalColors, .2, this.settings.countShades)
+            const base = shades.concat(generateBaseColorInfo(shades.at(-1).id - 100, this.settings.name, this.settings.baseColor))
+            const tints = calculateTintRamp(this.settings.name, this.settings.baseColor, this.totalColors, .2, 1, this.settings.countTints)
+            this.colors = base.concat(tints)
         },
     },
 })

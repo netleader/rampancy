@@ -24,7 +24,7 @@ const mainStore = useMainStore()
 const isCalculated = ref(false)
 
 function calculateColors() {
-  mainStore.calculateColors()
+  mainStore.calculateRamp()
   isCalculated.value = true
 }
 </script>
