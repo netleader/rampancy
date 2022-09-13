@@ -5,21 +5,24 @@
       <SettingsPane @onCalculate="calculateColors" />
     </div>
     <div class="column preview" v-if="isCalculated">
-      <color-ramp-part 
+      <color-ramp-pane
           v-for="color in mainStore.colors" :key="color.id" 
           :color="color"
           :light-check-color="mainStore.settings.lightCheckColor"
           :dark-check-color="mainStore.settings.darkCheckColor"
       />
     </div>
-    <div class="column curve" v-if="isCalculated">curve</div>
+    <div class="column curve" v-if="isCalculated">
+      <curve-pane />
+    </div>
   </div>
 </template>
 
 <script setup>
 import HeaderPane from "./components/HeaderPane"
 import SettingsPane from "./components/SettingsPane"
-import ColorRampPart from "@/components/ColorRampPart"
+import ColorRampPane from "@/components/ColorRampPart"
+import CurvePane from "@/components/CurvePane"
 import { useMainStore } from '@/stores/main'
 import { ref } from "vue";
 
@@ -98,6 +101,7 @@ button, input, optgroup, select, textarea {
     max-width: 300px;
   }
   &.preview {
+    width: 440px;
     max-width: 440px;
   }
 }
