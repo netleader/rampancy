@@ -1,12 +1,14 @@
 <template>
-  <form @submit.prevent="onSubmit">
+  <form @submit.prevent="requestCalculation">
     <div class="section-wrapper">
       <div class="section-title">Generic</div>
   
       <div class="row">
         <label for="inputName" class="col-form-label">Name</label>
         <div class="form-input-col">
-          <input v-model="settings.name" type="text" class="form-control" id="inputName" spellcheck="false" autocomplete="off">
+          <input
+              v-model="settings.name" v-on:input="requestCalculation"
+              type="text" class="form-control" id="inputName" spellcheck="false" autocomplete="off">
         </div>
       </div>
   
@@ -14,31 +16,33 @@
     
     <div class="section-wrapper">
       <div class="section-title">Colors</div>
-      
       <div class="row">
         <label for="inputBaseColor" class="col-form-label">Base Color</label>
         <div class="form-input-col">
           <div class="color-preview" :style="{ backgroundColor: settings.baseColor }"></div>
-          <input v-model="settings.baseColor" type="text" class="form-control" id="inputBaseColor" maxlength="7" spellcheck="false" autocomplete="off">
+          <input
+              v-model="settings.baseColor" v-on:change="requestCalculation"
+              type="text" class="form-control" id="inputBaseColor" maxlength="7" spellcheck="false" autocomplete="off">
         </div>
       </div>
-  
       <div class="row">
         <label for="inputForegroundLightColor" class="col-form-label">Light Check Color</label>
         <div class="form-input-col">
           <div class="color-preview" :style="{ backgroundColor: settings.lightCheckColor }"></div>
-          <input v-model="settings.lightCheckColor" type="text" class="form-control" id="inputForegroundLightColor" maxlength="7" spellcheck="false" autocomplete="off">
+          <input 
+              v-model="settings.lightCheckColor" v-on:change="requestCalculation"
+              type="text" class="form-control" id="inputForegroundLightColor" maxlength="7" spellcheck="false" autocomplete="off">
         </div>
       </div>
-  
       <div class="row">
         <label for="inputForegroundDarkColor" class="col-form-label">Dark Check Color</label>
         <div class="form-input-col">
           <div class="color-preview" :style="{ backgroundColor: settings.darkCheckColor }"></div>
-          <input v-model="settings.darkCheckColor" type="text" class="form-control" id="inputForegroundDarkColor" maxlength="7" spellcheck="false" autocomplete="off">
+          <input 
+              v-model="settings.darkCheckColor" v-on:change="requestCalculation"
+              type="text" class="form-control" id="inputForegroundDarkColor" maxlength="7" spellcheck="false" autocomplete="off">
         </div>
       </div>
-      
     </div>
     
     <div class="section-wrapper">
@@ -46,21 +50,27 @@
       <div class="row">
         <label for="inputAmountTints" class="col-form-label">Amount</label>
         <div class="form-input-col">
-          <input type="range" min="3" max="9" step="1" v-model="settings.countShades" class="slider" id="inputAmountTints">
+          <input
+              v-model="settings.countShades" v-on:input="requestCalculation"
+              type="range" min="3" max="9" step="1" class="slider" id="inputAmountTints">
           <div class="slider-value">{{ settings.countShades }}</div>
         </div>
       </div>
       <div class="row">
         <label for="inputMinShadeFactor" class="col-form-label">Min.</label>
         <div class="form-input-col">
-          <input type="range" min="1" max="9" step="0.1" v-model="settings.minShadeFactor" class="slider" id="inputMinShadeFactor">
+          <input
+              v-model="settings.minShadeFactor" v-on:input="requestCalculation"
+              type="range" min="1" max="9" step="0.1" class="slider" id="inputMinShadeFactor">
           <div class="slider-value">{{ minShadeFactor }}</div>
         </div>
       </div>
       <div class="row">
         <label for="inputMaxShadeFactor" class="col-form-label">Max.</label>
         <div class="form-input-col">
-          <input type="range" min="1" max="9" step="0.1" v-model="settings.maxShadeFactor" class="slider" id="inputMaxShadeFactor"> 
+          <input
+              v-model="settings.maxShadeFactor" v-on:input="requestCalculation"
+              type="range" min="1" max="9" step="0.1" class="slider" id="inputMaxShadeFactor"> 
           <div class="slider-value">{{ maxShadeFactor }}</div>
         </div>
       </div>
@@ -72,7 +82,9 @@
       <div class="row">
         <label for="inputAmountTints" class="col-form-label">Amount</label>
         <div class="form-input-col">
-          <input type="range" min="3" max="9" step="1" v-model="settings.countTints" class="slider" id="inputAmountTints">
+          <input
+              v-model="settings.countTints" v-on:input="requestCalculation"
+              type="range" min="3" max="9" step="1" class="slider" id="inputAmountTints">
           <div class="slider-value">{{ settings.countTints }}</div>
         </div>
       </div>
@@ -80,7 +92,9 @@
       <div class="row">
         <label for="inputMinTintFactor" class="col-form-label">Min.</label>
         <div class="form-input-col">
-          <input type="range" min="1" max="9" step="0.1" v-model="settings.minTintFactor" class="slider" id="inputMinTintFactor">
+          <input
+              v-model="settings.minTintFactor" v-on:input="requestCalculation"
+              type="range" min="1" max="9" step="0.1" class="slider" id="inputMinTintFactor">
           <div class="slider-value">{{ minTintFactor }}</div>
         </div>
       </div>
@@ -88,7 +102,9 @@
       <div class="row">
         <label for="inputMaxTintFactor" class="col-form-label">Max.</label>
         <div class="form-input-col">
-          <input type="range" min="1" max="9" step="0.1" v-model="settings.maxTintFactor" class="slider" id="inputMaxTintFactor">
+          <input
+              v-model="settings.maxTintFactor" v-on:input="requestCalculation"
+              type="range" min="1" max="9" step="0.1" class="slider" id="inputMaxTintFactor">
           <div class="slider-value">{{ maxTintFactor }}</div>
         </div>
       </div>
@@ -106,21 +122,25 @@ const mainStore = useMainStore()
 const settings = ref(mainStore.settings)
 const emit = defineEmits(['onCalculate'])
 
-function onSubmit() {
+function requestCalculation() {
   emit('onCalculate')
 }
 
+function keepDecimal(number, decimal) {
+  return Number(number).toFixed(decimal)
+}
+
 const maxShadeFactor = computed(() => {
-  return Number(mainStore.settings.maxShadeFactor).toFixed(1)
+  return keepDecimal(mainStore.settings.maxShadeFactor, 1)
 })
 const minShadeFactor = computed(() => {
-  return Number(mainStore.settings.minShadeFactor).toFixed(1)
+  return keepDecimal(mainStore.settings.minShadeFactor, 1)
 })
 const maxTintFactor = computed(() => {
-  return Number(mainStore.settings.maxTintFactor).toFixed(1)
+  return keepDecimal(mainStore.settings.maxTintFactor, 1)
 })
 const minTintFactor = computed(() => {
-  return Number(mainStore.settings.minTintFactor).toFixed(1)
+  return keepDecimal(mainStore.settings.minTintFactor, 1)
 })
 
 </script>

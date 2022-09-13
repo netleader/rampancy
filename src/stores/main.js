@@ -6,7 +6,6 @@ function calculateColorTint(hex, tintFactor) {
     const red = color.r + ((255 - color.r) * tintFactor)
     const green = color.g + ((255 - color.g) * tintFactor)
     const blue = color.b + ((255 - color.b) * tintFactor)
-    console.log(tintFactor)
     return tinycolor({r: red, g: green, b: blue}).toHexString()
 }
 
@@ -15,7 +14,6 @@ function calculateColorShade(hex, shadeFactor) {
     const red = color.r * shadeFactor
     const green = color.g * shadeFactor
     const blue = color.b * shadeFactor
-    
     return tinycolor({r: red, g: green, b: blue}).toHexString()
 }
 
@@ -24,23 +22,11 @@ function calculateStepValue(min, max, points) {
     return Number(spacing.toFixed(3));
 }
 
-function getTokenName(id, name) {
-    return `color-${name}-${id}`
-}
-
 function calculateShadeRamp(name, baseColor, totalColors, minShadeFactor, maxShadeFactor, totalShades) {
     const result = []
-    let previewsId = (totalColors * 100) + 100;
     const shadeFactorStep = calculateStepValue(minShadeFactor, maxShadeFactor, totalShades)
-
     for (let i = totalShades - 1; i >= 0; i--) {
-        let newId = previewsId - 100
-        result[i] = {
-            id: newId,
-            hex: calculateColorShade(baseColor, minShadeFactor),
-            token: getTokenName(newId, name)
-        }
-        previewsId = newId
+        result[i] = { hex: calculateColorShade(baseColor, minShadeFactor) }
         minShadeFactor = shadeFactorStep + minShadeFactor
     }
     return result.reverse()
@@ -51,50 +37,64 @@ function calculateTintRamp(name, baseColor, totalColors, minTintFactor, maxTintF
     const tintFactorStep = calculateStepValue(minTintFactor, maxTintFactor, totalTints)
     let currentStep = maxTintFactor
     for (let i = 0; i < totalTints; i++) {
-        let newId = (i+1) * 100
-        result[i] = {
-            id: newId,
-            hex: calculateColorTint(baseColor, currentStep),
-            token: getTokenName(newId, name)
-        }
+        result[i] = { hex: calculateColorTint(baseColor, currentStep) }
         currentStep = currentStep - tintFactorStep
     }
     return result.reverse()
 }
 
-function generateBaseColorInfo(id, name, baseColor) {
+function generateBaseColorInfo(baseColor) {
     return {
-        id,
-        hex: baseColor,
-        token: getTokenName(id, name)
+        hex: baseColor
     }
 }
 
 export const useMainStore = defineStore('main', {
     state: () => ({
         settings: {
-            name: "Red",
-            baseColor: "#e60012",
+            name: "blue",
+            baseColor: "#4199fa",
             lightCheckColor: "#f4f4f4",
             darkCheckColor: "#141414",
             countShades: 5,
             countTints: 4,
-            minShadeFactor: 2.0,
-            maxShadeFactor: 8.0,
-            minTintFactor: 3.0,
-            maxTintFactor: 8.0
+            minShadeFactor: 1.5,
+            maxShadeFactor: 7.5,
+            minTintFactor: 2,
+            maxTintFactor: 8
         },
         colors: []
     }),
     getters: {
         totalColors: (state) => state.settings.countShades + state.settings.countTints + 1,
+        maxContrast: (state) => {
+            const contrast = tinycolor.readability(state.settings.lightCheckColor, state.settings.darkCheckColor)
+            return Math.round(contrast)
+        }
     },
     actions: {
+        ratioToPercentage(value) {
+            return (1 / value) * 100
+        },
+        getColorInfos(ramp) {
+            let totalColorCount = ramp.length
+            ramp.forEach ((color) => {
+                color.id = totalColorCount * 100
+                color.token = `color-${this.settings.name}-${color.id}`
+                color.contrastLight = Number(tinycolor.readability(color.hex, this.settings.lightCheckColor)).toFixed(1)
+                color.contrastDark = Number(tinycolor.readability(color.hex, this.settings.darkCheckColor)).toFixed(1)
+                color.contrastLightPercentage = this.ratioToPercentage(color.contrastLight)
+                
+                totalColorCount--
+            });
+            return ramp
+        },
         calculateRamp() {
             const shades = calculateShadeRamp(this.settings.name, this.settings.baseColor, this.totalColors, this.settings.minShadeFactor/10, this.settings.maxShadeFactor/10, this.settings.countShades)
-            const base = shades.concat(generateBaseColorInfo(shades.at(-1).id - 100, this.settings.name, this.settings.baseColor))
+            const base = shades.concat(generateBaseColorInfo(this.settings.baseColor))
             const tints = calculateTintRamp(this.settings.name, this.settings.baseColor, this.totalColors, this.settings.minTintFactor/10, this.settings.maxTintFactor/10, this.settings.countTints)
-            this.colors = base.concat(tints)
+            
+            this.colors = this.getColorInfos(base.concat(tints))
         },
     },
 })

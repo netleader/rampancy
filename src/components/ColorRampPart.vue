@@ -1,48 +1,46 @@
 <template>
   <div class="color" :style="{ backgroundColor: color.hex}">
-    <div class="wrapper">
+    <div class="wrapper" :style="{color: getForegroundColor}">
       <div class="id">{{ color.id }}</div>
       <div class="hex">{{ color.hex }}</div>
       <div class="token">{{ color.token }}</div>
     </div>
     <div class="spacer"></div>
     <div class="contrast-wrapper">
-      <div class="contrast light foreground">
-        <font-awesome-icon class="icon" icon="fa-solid fa-check" />
-        <div class="rating" :style="{ color: lightCheckColor}">100</div>
+      <div class="contrast light foreground" :style="[color.contrastLight < maxAllowedContrast ? 'opacity: .3': '']">
+        <font-awesome-icon v-if="color.contrastLight >= maxAllowedContrast" :style="{ color: lightCheckColor}" class="icon" icon="fa-solid fa-check" />
+        <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
+        <div class="rating" :style="{ color: lightCheckColor }">{{ color.contrastLight}}</div>
       </div>
-      <div class="contrast dark foreground">
-        <font-awesome-icon class="icon" icon="fa-solid fa-check" />
-        <div class="rating" :style="{ color: darkCheckColor}">100</div>
-      </div>
-      <div class="contrast light background" :style="{ backgroundColor: lightCheckColor}">
-        <font-awesome-icon class="icon" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: color.hex}">100</div>
-      </div>
-      <div class="contrast dark background" :style="{ backgroundColor: darkCheckColor}">
-        <font-awesome-icon class="icon" icon="fa-solid fa-check" />
-        <div class="rating" :style="{ color: color.hex}">100</div>
+      <div class="contrast dark foreground" :style="[color.contrastDark < maxAllowedContrast ? 'opacity: .3': '']">
+        <font-awesome-icon v-if="color.contrastDark>= maxAllowedContrast" :style="{ color: darkCheckColor}" class="icon" icon="fa-solid fa-check" />
+        <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
+        <div class="rating" :style="{ color: darkCheckColor }">{{ color.contrastDark}}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import {defineProps, onMounted} from 'vue'
+import { defineProps, computed } from 'vue'
 
-defineProps({
+const maxAllowedContrast = 4.5
+const props = defineProps({
   color: Object,
   lightCheckColor: String,
   darkCheckColor: String
 })
 
-onMounted(() => {
-  console.log("tinycolor")
+const getForegroundColor = computed(() => {
+  return props.color.contrastLight >= props.color.contrastDark ? props.lightCheckColor : props.darkCheckColor
 })
 
 </script>
 
 <style lang="scss" scoped>
+.icon-fail {
+  color: red;
+}
 .spacer {
   display: flex;
   flex-grow: 1;
@@ -67,8 +65,10 @@ onMounted(() => {
 .contrast {
   display: flex;
   align-items: center;
+  justify-content: left;
   border-radius: 3px;
   padding: 2px 6px;
+  width: 60px;
 
   &.foreground {
     border: 1px solid rgba(white, 10%);
