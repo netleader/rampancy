@@ -24,17 +24,21 @@ function calculateStepValue(min, max, points) {
     return Number(spacing.toFixed(3));
 }
 
-function calculateShadeRamp(name, baseColor, totalColors, minShadeFactor, totalShades) {
+function getTokenName(id, name) {
+    return `color-${name}-${id}`
+}
+
+function calculateShadeRamp(name, baseColor, totalColors, minShadeFactor, maxShadeFactor, totalShades) {
     const result = []
     let previewsId = (totalColors * 100) + 100;
-    const shadeFactorStep = calculateStepValue(minShadeFactor, .8, totalShades)
+    const shadeFactorStep = calculateStepValue(minShadeFactor, maxShadeFactor, totalShades)
 
-    for (let i = totalShades-1; i >= 0; i--) {
+    for (let i = totalShades - 1; i >= 0; i--) {
         let newId = previewsId - 100
         result[i] = {
             id: newId,
             hex: calculateColorShade(baseColor, minShadeFactor),
-            token: "color-" + name + "-" + newId
+            token: getTokenName(newId, name)
         }
         previewsId = newId
         minShadeFactor = shadeFactorStep + minShadeFactor
@@ -44,18 +48,16 @@ function calculateShadeRamp(name, baseColor, totalColors, minShadeFactor, totalS
 
 function calculateTintRamp(name, baseColor, totalColors, minTintFactor, maxTintFactor, totalTints) {
     const result = []
-    let x = 0.75
-
     const tintFactorStep = calculateStepValue(minTintFactor, maxTintFactor, totalTints)
-    
+    let currentStep = maxTintFactor
     for (let i = 0; i < totalTints; i++) {
         let newId = (i+1) * 100
         result[i] = {
             id: newId,
-            hex: calculateColorTint(baseColor, tintFactorStep),
-            token: "color-" + name + "-" + newId
+            hex: calculateColorTint(baseColor, currentStep),
+            token: getTokenName(newId, name)
         }
-        x = x - ((8 / totalTints) / 10)
+        currentStep = currentStep - tintFactorStep
     }
     return result.reverse()
 }
@@ -64,7 +66,7 @@ function generateBaseColorInfo(id, name, baseColor) {
     return {
         id,
         hex: baseColor,
-        token: "color-" + name + "-" + id
+        token: getTokenName(id, name)
     }
 }
 
@@ -74,9 +76,13 @@ export const useMainStore = defineStore('main', {
             name: "Red",
             baseColor: "#e60012",
             lightCheckColor: "#f4f4f4",
-            darkCheckColor: "#202020",
+            darkCheckColor: "#141414",
             countShades: 5,
-            countTints: 4
+            countTints: 4,
+            minShadeFactor: 2.0,
+            maxShadeFactor: 8.0,
+            minTintFactor: 3.0,
+            maxTintFactor: 8.0
         },
         colors: []
     }),
@@ -85,9 +91,9 @@ export const useMainStore = defineStore('main', {
     },
     actions: {
         calculateRamp() {
-            const shades = calculateShadeRamp(this.settings.name, this.settings.baseColor, this.totalColors, .2, this.settings.countShades)
+            const shades = calculateShadeRamp(this.settings.name, this.settings.baseColor, this.totalColors, this.settings.minShadeFactor/10, this.settings.maxShadeFactor/10, this.settings.countShades)
             const base = shades.concat(generateBaseColorInfo(shades.at(-1).id - 100, this.settings.name, this.settings.baseColor))
-            const tints = calculateTintRamp(this.settings.name, this.settings.baseColor, this.totalColors, .2, 1, this.settings.countTints)
+            const tints = calculateTintRamp(this.settings.name, this.settings.baseColor, this.totalColors, this.settings.minTintFactor/10, this.settings.maxTintFactor/10, this.settings.countTints)
             this.colors = base.concat(tints)
         },
     },

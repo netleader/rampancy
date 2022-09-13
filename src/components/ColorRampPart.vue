@@ -9,19 +9,19 @@
     <div class="contrast-wrapper">
       <div class="contrast light foreground">
         <font-awesome-icon class="icon" icon="fa-solid fa-check" />
-        <div class="rating">100</div>
+        <div class="rating" :style="{ color: lightCheckColor}">100</div>
       </div>
       <div class="contrast dark foreground">
         <font-awesome-icon class="icon" icon="fa-solid fa-check" />
-        <div class="rating">100</div>
+        <div class="rating" :style="{ color: darkCheckColor}">100</div>
       </div>
-      <div class="contrast light background">
+      <div class="contrast light background" :style="{ backgroundColor: lightCheckColor}">
         <font-awesome-icon class="icon" icon="fa-solid fa-xmark" />
-        <div class="rating">100</div>
+        <div class="rating" :style="{ color: color.hex}">100</div>
       </div>
-      <div class="contrast dark background">
+      <div class="contrast dark background" :style="{ backgroundColor: darkCheckColor}">
         <font-awesome-icon class="icon" icon="fa-solid fa-check" />
-        <div class="rating">100</div>
+        <div class="rating" :style="{ color: color.hex}">100</div>
       </div>
     </div>
   </div>
@@ -31,7 +31,9 @@
 import {defineProps, onMounted} from 'vue'
 
 defineProps({
-  color: Object
+  color: Object,
+  lightCheckColor: String,
+  darkCheckColor: String
 })
 
 onMounted(() => {
@@ -69,7 +71,7 @@ onMounted(() => {
   padding: 2px 6px;
 
   &.foreground {
-    border: 1px solid rgba(white, 33%);
+    border: 1px solid rgba(white, 10%);
   }
 
   & > .icon {

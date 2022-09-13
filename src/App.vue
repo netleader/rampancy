@@ -7,7 +7,10 @@
     <div class="column preview" v-if="isCalculated">
       <color-ramp-part 
           v-for="color in mainStore.colors" :key="color.id" 
-          :color="color" />
+          :color="color"
+          :light-check-color="mainStore.settings.lightCheckColor"
+          :dark-check-color="mainStore.settings.darkCheckColor"
+      />
     </div>
     <div class="column curve" v-if="isCalculated">curve</div>
   </div>
@@ -24,7 +27,7 @@ const mainStore = useMainStore()
 const isCalculated = ref(false)
 
 function calculateColors() {
-  mainStore.calculateRamp()
+  mainStore.calculateRamp(2, 8, 3,8)
   isCalculated.value = true
 }
 </script>

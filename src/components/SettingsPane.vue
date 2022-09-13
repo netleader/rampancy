@@ -40,30 +40,66 @@
       </div>
       
     </div>
+    
     <div class="section-wrapper">
-      <div class="section-title">Amount</div>
-  
+      <div class="section-title">Shades</div>
       <div class="row">
-        <label for="inputAmountShades" class="col-form-label">Shades</label>
+        <label for="inputAmountTints" class="col-form-label">Amount</label>
         <div class="form-input-col">
-          <input v-model="settings.countShades" type="number" class="form-control" id="inputAmountShades" maxlength="2" min="2" max="7" spellcheck="false" autocomplete="off">
+          <input type="range" min="3" max="9" step="1" v-model="settings.countShades" class="slider" id="inputAmountTints">
+          <div class="slider-value">{{ settings.countShades }}</div>
         </div>
       </div>
-      
       <div class="row">
-        <label for="inputAmountTints" class="col-form-label">Tints</label>
+        <label for="inputMinShadeFactor" class="col-form-label">Min.</label>
         <div class="form-input-col">
-          <input v-model="settings.countTints" type="number" class="form-control" id="inputAmountTints" maxlength="2" min="2" max="6" spellcheck="false" autocomplete="off">
+          <input type="range" min="1" max="9" step="0.1" v-model="settings.minShadeFactor" class="slider" id="inputMinShadeFactor">
+          <div class="slider-value">{{ minShadeFactor }}</div>
         </div>
       </div>
-      
+      <div class="row">
+        <label for="inputMaxShadeFactor" class="col-form-label">Max.</label>
+        <div class="form-input-col">
+          <input type="range" min="1" max="9" step="0.1" v-model="settings.maxShadeFactor" class="slider" id="inputMaxShadeFactor"> 
+          <div class="slider-value">{{ maxShadeFactor }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-wrapper">
+      <div class="section-title">Tints</div>
+
+      <div class="row">
+        <label for="inputAmountTints" class="col-form-label">Amount</label>
+        <div class="form-input-col">
+          <input type="range" min="3" max="9" step="1" v-model="settings.countTints" class="slider" id="inputAmountTints">
+          <div class="slider-value">{{ settings.countTints }}</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label for="inputMinTintFactor" class="col-form-label">Min.</label>
+        <div class="form-input-col">
+          <input type="range" min="1" max="9" step="0.1" v-model="settings.minTintFactor" class="slider" id="inputMinTintFactor">
+          <div class="slider-value">{{ minTintFactor }}</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <label for="inputMaxTintFactor" class="col-form-label">Max.</label>
+        <div class="form-input-col">
+          <input type="range" min="1" max="9" step="0.1" v-model="settings.maxTintFactor" class="slider" id="inputMaxTintFactor">
+          <div class="slider-value">{{ maxTintFactor }}</div>
+        </div>
+      </div>
+
     </div>
     <button type="submit" class="btn btn-primary">Calculate</button>
   </form>
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref, computed, defineEmits } from 'vue'
 import { useMainStore } from '@/stores/main'
 
 const mainStore = useMainStore()
@@ -73,6 +109,20 @@ const emit = defineEmits(['onCalculate'])
 function onSubmit() {
   emit('onCalculate')
 }
+
+const maxShadeFactor = computed(() => {
+  return Number(mainStore.settings.maxShadeFactor).toFixed(1)
+})
+const minShadeFactor = computed(() => {
+  return Number(mainStore.settings.minShadeFactor).toFixed(1)
+})
+const maxTintFactor = computed(() => {
+  return Number(mainStore.settings.maxTintFactor).toFixed(1)
+})
+const minTintFactor = computed(() => {
+  return Number(mainStore.settings.minTintFactor).toFixed(1)
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -122,10 +172,12 @@ $border-color: #3a3a3a;
 .form-input-col {
   display: flex;
   flex-direction: row;
+  align-items: center;
   width: 50%;
 }
 .color-preview {
   width: 36px;
+  height: 100%;
   border-bottom: 1px solid $border-color;
   border-top: 1px solid $border-color;
   border-left: 1px solid $border-color;
@@ -147,6 +199,37 @@ $border-color: #3a3a3a;
   &:focus {
     border-color: lighten($border-color, 20%);
     outline: none ;
+  }
+}
+
+$slider-size: 12px;
+
+.slider {
+  -webkit-appearance: none;
+  width: 80%;
+  height: 4px;
+  border-radius: 4px;
+  background: $border-color;
+  outline: none;
+  opacity: 1;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  &::-webkit-slider-thumb,
+  &::-webkit-slider-thumb {
+    width: $slider-size;
+    height: $slider-size;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
+  }
+  &-value {
+    display: flex;
+    justify-content: right;
+    width: 20%;
   }
 }
 </style>
