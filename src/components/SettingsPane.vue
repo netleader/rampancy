@@ -94,7 +94,7 @@
         <div class="form-input-col">
           <input
               v-model="settings.minTintFactor" v-on:input="requestCalculation"
-              type="range" min="1" max="9" step="0.1" class="slider" id="inputMinTintFactor">
+              type="range" min="0" max="100" step="1" class="slider" id="inputMinTintFactor">
           <div class="slider-value">{{ settings.minTintFactor }}</div>
         </div>
       </div>
@@ -104,7 +104,7 @@
         <div class="form-input-col">
           <input
               v-model="settings.maxTintFactor" v-on:input="requestCalculation"
-              type="range" min="1" max="9" step="0.1" class="slider" id="inputMaxTintFactor">
+              type="range" min="0" max="100" step="1" class="slider" id="inputMaxTintFactor">
           <div class="slider-value">{{ settings.maxTintFactor }}</div>
         </div>
       </div>

@@ -6,10 +6,10 @@
             v-for="color in colors" :key="color.id"
             :style="{ 
               backgroundColor: color.hex, 
-              bottom: color.lightness + '%',
-              left: getSaturationPosition(color.saturation)
+              bottom: adjustPosition(color.lightness),
+              left: adjustPosition(color.saturation)
             }"
-            class="test" ></div>
+            class="colorHandle"></div>
       </div>
       <div class="right">
         <div>100</div>
@@ -32,8 +32,8 @@ defineProps({
   colors: Object
 })
 
-function getSaturationPosition(saturation) {
-  return `calc(${saturation}% - 8px)`
+function adjustPosition(pos) {
+  return `calc(${pos}% - 8px)`
 }
 </script>
 
@@ -64,7 +64,7 @@ $grid-box-size: 35px;
   writing-mode: vertical-rl;
   text-orientation: mixed;
 }
-.test {
+.colorHandle {
   position: absolute;
   height: 16px;
   width: 16px;

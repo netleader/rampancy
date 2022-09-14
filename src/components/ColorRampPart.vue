@@ -8,8 +8,8 @@
     <div class="spacer"></div>
     <div class="contrast-wrapper">
       
-      <div class="contrast light foreground" :style="[color.contrastLight < maxAllowedContrast ? 'opacity: .3': '']">
-        <font-awesome-icon v-if="color.contrastLight >= maxAllowedContrast" :style="{ color: lightCheckColor }" class="icon" icon="fa-solid fa-check" />
+      <div class="contrast light foreground" :style="[color.contrastLight < maxAllowedContrast && !checkWithHighLuminance ? 'opacity: .3': '']">
+        <font-awesome-icon v-if="checkWithHighLuminance" :style="{ color: lightCheckColor }" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
         <div class="rating" :style="{ color: lightCheckColor }">Aa</div>
       </div>
@@ -27,7 +27,7 @@
 <script setup>
 import { defineProps, computed } from 'vue'
 
-const maxAllowedContrast = 4
+const maxAllowedContrast = 4.5
 const props = defineProps({
   color: Object,
   lightCheckColor: String,
@@ -36,6 +36,10 @@ const props = defineProps({
 
 const getForegroundColor = computed(() => {
   return props.color.contrastLight >= props.color.contrastDark ? props.lightCheckColor : props.darkCheckColor
+})
+
+const checkWithHighLuminance = computed(() => {
+  return (props.color.contrastLight >= maxAllowedContrast) || (props.color.luminance >= 15 && Math.round(props.color.lightness) <= 50)
 })
 
 </script>
