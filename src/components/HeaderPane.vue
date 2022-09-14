@@ -4,7 +4,7 @@
       <div class="logo">rampancy</div>
       <div class="version-wrapper">
         <div class="block"></div>
-        <div class="version">0.0.0 Beta</div>
+        <div class="version">1.0.0 Beta</div>
         <div class="block-fixed"></div>
       </div>
     </div>
