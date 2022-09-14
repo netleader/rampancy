@@ -2,8 +2,6 @@ import {defineStore} from 'pinia'
 import chroma from "chroma-js";
 import _range from "lodash-es/_baseRange";
 
-const tinycolor = require("tinycolor2");
-
 function calculateStepValue(min, max, points) {
     return (max - min) / points
 }
@@ -89,8 +87,8 @@ export const useMainStore = defineStore('main', {
             ramp.forEach ((color) => {
                 color.id = totalColorCount * 100
                 color.token = `color-${this.settings.name}-${color.id}`
-                color.lightness = tinycolor(color.hex).toHsl().l * 100
-                color.saturation = tinycolor(color.hex).toHsl().s * 100
+                color.lightness = chroma(color.hex).hsl()[2] * 100
+                color.saturation = chroma(color.hex).hsl()[1] * 100
                 totalColorCount--
             });
             return ramp
