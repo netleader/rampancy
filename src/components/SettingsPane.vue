@@ -19,7 +19,8 @@
       <div class="row">
         <label for="inputBaseColor" class="col-form-label">Base Color</label>
         <div class="form-input-col">
-          <div class="color-preview" :style="{ backgroundColor: settings.baseColor }"></div>
+          <input v-model="settings.baseColor" v-on:change="requestCalculation"
+              type="color" class="color-preview">
           <input
               v-model="settings.baseColor" v-on:change="requestCalculation"
               type="text" class="form-control" id="inputBaseColor" maxlength="7" spellcheck="false" autocomplete="off">
@@ -28,7 +29,8 @@
       <div class="row">
         <label for="inputForegroundLightColor" class="col-form-label">Light Check Color</label>
         <div class="form-input-col">
-          <div class="color-preview" :style="{ backgroundColor: settings.lightCheckColor }"></div>
+          <input v-model="settings.lightCheckColor" v-on:change="requestCalculation"
+                 type="color" class="color-preview">
           <input 
               v-model="settings.lightCheckColor" v-on:change="requestCalculation"
               type="text" class="form-control" id="inputForegroundLightColor" maxlength="7" spellcheck="false" autocomplete="off">
@@ -37,7 +39,8 @@
       <div class="row">
         <label for="inputForegroundDarkColor" class="col-form-label">Dark Check Color</label>
         <div class="form-input-col">
-          <div class="color-preview" :style="{ backgroundColor: settings.darkCheckColor }"></div>
+          <input v-model="settings.darkCheckColor" v-on:change="requestCalculation"
+                 type="color" class="color-preview">
           <input 
               v-model="settings.darkCheckColor" v-on:change="requestCalculation"
               type="text" class="form-control" id="inputForegroundDarkColor" maxlength="7" spellcheck="false" autocomplete="off">
@@ -80,7 +83,7 @@
       <div class="section-title">Tints</div>
 
       <div class="row">
-        <label for="inputAmountTints" class="col-form-label">Amount</label>
+        <label for="inputAmountTints" class="col-form-label">Count</label>
         <div class="form-input-col">
           <input
               v-model="settings.countTints" v-on:input="requestCalculation"
@@ -125,11 +128,29 @@ const emit = defineEmits(['onCalculate'])
 function requestCalculation() {
   emit('onCalculate')
 }
-
 </script>
 
 <style lang="scss" scoped>
 $border-color: #3a3a3a;
+
+input[type="color"] {
+  cursor: pointer;
+  -webkit-appearance: none;
+  width: 36px;
+  height: 100%;
+  padding: 0;
+  outline: 0;
+  border-bottom: 1px solid $border-color;
+  border-top: 1px solid $border-color;
+  border-left: 1px solid $border-color;
+  border-right: none;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+  border: none;
+}
 
 .btn {
   border: none;

@@ -50,12 +50,10 @@ function calculateShadeRamp(baseColor, minShadeFactor, maxShadeFactor, totalShad
 
 function calculateTintRamp(baseColor, minTintFactor, maxTintFactor, totalTints) {
     const result = []
-
     const colors = autoTints(minTintFactor, maxTintFactor, baseColor, totalTints)
     colors.forEach((color, index) => {
         result[index] = { hex: color }
     })
-
     return result.reverse()
 }
 
@@ -70,8 +68,8 @@ export const useMainStore = defineStore('main', {
         settings: {
             name: "red",
             baseColor: "#f24822",
-            lightCheckColor: "#fff",
-            darkCheckColor: "#000",
+            lightCheckColor: "#ffffff",
+            darkCheckColor: "#000000",
             countShades: 5,
             countTints: 4,
             minShadeFactor: 25,
