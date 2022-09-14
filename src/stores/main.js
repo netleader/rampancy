@@ -83,31 +83,14 @@ export const useMainStore = defineStore('main', {
         },
         colors: []
     }),
-    getters: {
-        totalColors: (state) => state.settings.countShades + state.settings.countTints + 1,
-        maxContrast: (state) => {
-            const contrast = tinycolor.readability(state.settings.lightCheckColor, state.settings.darkCheckColor)
-            return Math.round(contrast)
-        }
-    },
     actions: {
-        ratioToPercentage(value) {
-            return (1 / value) * 100
-        },
         getColorInfos(ramp) {
             let totalColorCount = ramp.length
             ramp.forEach ((color) => {
                 color.id = totalColorCount * 100
                 color.token = `color-${this.settings.name}-${color.id}`
-
-                color.hue = tinycolor(color.hex).toHsl().h
                 color.lightness = tinycolor(color.hex).toHsl().l * 100
                 color.saturation = tinycolor(color.hex).toHsl().s * 100
-                color.luminance = Math.round(chroma(color.hex).luminance() * 100)
-                
-                color.contrastLight = Number(tinycolor.readability(color.hex, this.settings.lightCheckColor)).toFixed(1)
-                color.contrastDark = Number(tinycolor.readability(color.hex, this.settings.darkCheckColor)).toFixed(1)
-                
                 totalColorCount--
             });
             return ramp
