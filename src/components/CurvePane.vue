@@ -26,16 +26,15 @@
 </template>
 
 <script setup>
-import { useMainStore } from '@/stores/main'
-import { ref } from "vue";
+import { defineProps } from "vue";
 
-const mainStore = useMainStore()
-const colors = ref(mainStore.colors)
+defineProps({
+  colors: Object
+})
 
 function getSaturationPosition(saturation) {
   return `calc(${saturation}% - 8px)`
 }
-
 </script>
 
 <style lang="scss" scoped>

@@ -13,7 +13,7 @@
       />
     </div>
     <div class="column curve" v-if="isCalculated">
-      <curve-pane />
+      <curve-pane :colors="mainStore.colors" />
     </div>
   </div>
 </template>

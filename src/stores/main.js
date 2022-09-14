@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import chroma from "chroma-js";
+import _range from 'lodash-es/range';
 const tinycolor = require("tinycolor2");
 
 function calculateColorTint(hex, tintFactor) {
@@ -9,24 +11,49 @@ function calculateColorTint(hex, tintFactor) {
     return tinycolor({r: red, g: green, b: blue}).toHexString()
 }
 
-function calculateColorShade(hex, shadeFactor) {
-    const color = tinycolor(hex).toRgb()
-    const red = color.r * shadeFactor
-    const green = color.g * shadeFactor
-    const blue = color.b * shadeFactor
-    return tinycolor({r: red, g: green, b: blue}).toHexString()
-}
+// function calculateColorShade(hex, shadeFactor) {
+//     const color = tinycolor(hex).toRgb()
+//     const red = color.r * shadeFactor
+//     const green = color.g * shadeFactor
+//     const blue = color.b * shadeFactor
+//     return tinycolor({r: red, g: green, b: blue}).toHexString()
+// }
 
 function calculateStepValue(min, max, points) {
     const spacing = (max - min) / (points - 1)
     return Number(spacing.toFixed(3));
 }
+function autoGradient(color, numColors) {
+    const lab = chroma(color).lab();
+    
+    const lRange = 100 * (0.95 - 1/numColors);
+    const lStep = lRange / (numColors-1);
+    let lStart = (100-lRange)*0.5;
+    const range = _range(lStart, lStart+numColors*lStep, lStep);
+    
+    console.log(lStep)
+    
+    let offset = 9999;
+    for (let i=0; i < numColors; i++) {
+        let diff = lab[0] - range[i];
+        if (Math.abs(diff) < Math.abs(offset)) {
+            offset = diff;
+        }
+    }
+    return range.map(l => chroma.lab([l + offset, lab[1], lab[2]]));
+}
 
 function calculateShadeRamp(name, baseColor, totalColors, minShadeFactor, maxShadeFactor, totalShades) {
     const result = []
     const shadeFactorStep = calculateStepValue(minShadeFactor, maxShadeFactor, totalShades)
+    console.log(shadeFactorStep)
+    
+    const genColors = autoGradient(baseColor, totalShades)
+    const stepsLeft = chroma.scale(genColors).correctLightness(true).colors(totalShades)
+
     for (let i = totalShades - 1; i >= 0; i--) {
-        result[i] = { hex: calculateColorShade(baseColor, minShadeFactor) }
+        // result[i] = { hex: calculateColorShade(baseColor, minShadeFactor) }
+        result[i] = { hex: stepsLeft[i] }
         minShadeFactor = shadeFactorStep + minShadeFactor
     }
     return result.reverse()
@@ -87,14 +114,6 @@ export const useMainStore = defineStore('main', {
                 
                 color.contrastLight = Number(tinycolor.readability(color.hex, this.settings.lightCheckColor)).toFixed(1)
                 color.contrastDark = Number(tinycolor.readability(color.hex, this.settings.darkCheckColor)).toFixed(1)
-
-                // const contrast = Number(tinycolor.readability(this.settings.darkCheckColor, color.hex)).toFixed(2)
-                // let percentage = 100 - this.ratioToPercentage(contrast)
-                // color.contrastDarkPercentage = Math.round(percentage)
-                //
-                // let LL1 = tinycolor(this.settings.lightCheckColor).getLuminance()
-                // let LL2 = tinycolor(color.hex).getLuminance()
-                // color.contrastLightPercentage = Math.round((LL1 - LL2) * 100 / LL1)
                 
                 totalColorCount--
             });
