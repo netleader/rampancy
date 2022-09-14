@@ -6,15 +6,15 @@
             v-for="color in colors" :key="color.id"
             :style="{ 
               backgroundColor: color.hex, 
-              top: color.lightness + '%',
+              bottom: color.lightness + '%',
               left: getSaturationPosition(color.saturation)
             }"
             class="test" ></div>
       </div>
       <div class="right">
-        <div>0</div>
-        <div>Lightness</div>
         <div>100</div>
+        <div>Lightness</div>
+        <div>0</div>
       </div>
     </div>
     <div class="bottom">

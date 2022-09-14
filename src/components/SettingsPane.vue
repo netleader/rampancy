@@ -48,7 +48,7 @@
     <div class="section-wrapper">
       <div class="section-title">Shades</div>
       <div class="row">
-        <label for="inputAmountTints" class="col-form-label">Amount</label>
+        <label for="inputAmountTints" class="col-form-label">Count</label>
         <div class="form-input-col">
           <input
               v-model="settings.countShades" v-on:input="requestCalculation"
@@ -61,8 +61,8 @@
         <div class="form-input-col">
           <input
               v-model="settings.minShadeFactor" v-on:input="requestCalculation"
-              type="range" min="1" max="9" step="0.1" class="slider" id="inputMinShadeFactor">
-          <div class="slider-value">{{ minShadeFactor }}</div>
+              type="range" min="0" max="100" step="1" class="slider" id="inputMinShadeFactor">
+          <div class="slider-value">{{ settings.minShadeFactor }}</div>
         </div>
       </div>
       <div class="row">
@@ -70,8 +70,8 @@
         <div class="form-input-col">
           <input
               v-model="settings.maxShadeFactor" v-on:input="requestCalculation"
-              type="range" min="1" max="9" step="0.1" class="slider" id="inputMaxShadeFactor"> 
-          <div class="slider-value">{{ maxShadeFactor }}</div>
+              type="range" min="1" max="100" step="1" class="slider" id="inputMaxShadeFactor"> 
+          <div class="slider-value">{{ settings.maxShadeFactor }}</div>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@
           <input
               v-model="settings.minTintFactor" v-on:input="requestCalculation"
               type="range" min="1" max="9" step="0.1" class="slider" id="inputMinTintFactor">
-          <div class="slider-value">{{ minTintFactor }}</div>
+          <div class="slider-value">{{ settings.minTintFactor }}</div>
         </div>
       </div>
 
@@ -105,7 +105,7 @@
           <input
               v-model="settings.maxTintFactor" v-on:input="requestCalculation"
               type="range" min="1" max="9" step="0.1" class="slider" id="inputMaxTintFactor">
-          <div class="slider-value">{{ maxTintFactor }}</div>
+          <div class="slider-value">{{ settings.maxTintFactor }}</div>
         </div>
       </div>
 
@@ -125,23 +125,6 @@ const emit = defineEmits(['onCalculate'])
 function requestCalculation() {
   emit('onCalculate')
 }
-
-function keepDecimal(number, decimal) {
-  return Number(number).toFixed(decimal)
-}
-
-const maxShadeFactor = computed(() => {
-  return keepDecimal(mainStore.settings.maxShadeFactor, 1)
-})
-const minShadeFactor = computed(() => {
-  return keepDecimal(mainStore.settings.minShadeFactor, 1)
-})
-const maxTintFactor = computed(() => {
-  return keepDecimal(mainStore.settings.maxTintFactor, 1)
-})
-const minTintFactor = computed(() => {
-  return keepDecimal(mainStore.settings.minTintFactor, 1)
-})
 
 </script>
 

@@ -27,7 +27,7 @@
 <script setup>
 import { defineProps, computed } from 'vue'
 
-const maxAllowedContrast = 4.5
+const maxAllowedContrast = 4
 const props = defineProps({
   color: Object,
   lightCheckColor: String,

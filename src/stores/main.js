@@ -1,6 +1,7 @@
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 import chroma from "chroma-js";
-import _range from 'lodash-es/range';
+import _range from "lodash-es/_baseRange";
+
 const tinycolor = require("tinycolor2");
 
 function calculateColorTint(hex, tintFactor) {
@@ -11,51 +12,46 @@ function calculateColorTint(hex, tintFactor) {
     return tinycolor({r: red, g: green, b: blue}).toHexString()
 }
 
-// function calculateColorShade(hex, shadeFactor) {
-//     const color = tinycolor(hex).toRgb()
-//     const red = color.r * shadeFactor
-//     const green = color.g * shadeFactor
-//     const blue = color.b * shadeFactor
-//     return tinycolor({r: red, g: green, b: blue}).toHexString()
-// }
+function calculateColorShade(hex, shadeFactor) {
+    const color = tinycolor(hex).toRgb()
+    const red = color.r * shadeFactor
+    const green = color.g * shadeFactor
+    const blue = color.b * shadeFactor
+    return tinycolor({r: red, g: green, b: blue}).toHexString()
+}
 
 function calculateStepValue(min, max, points) {
-    const spacing = (max - min) / (points - 1)
-    return Number(spacing.toFixed(3));
+    return (max - min) / points
 }
-function autoGradient(color, numColors) {
+
+// https://github.com/gka/palettes/blob/master/src/PalettePreview.svelte
+
+
+function autoGradient(minPercentage, maxPercentage, color, numColors) {
     const lab = chroma(color).lab();
     
-    const lRange = 100 * (0.95 - 1/numColors);
-    const lStep = lRange / (numColors-1);
-    let lStart = (100-lRange)*0.5;
-    const range = _range(lStart, lStart+numColors*lStep, lStep);
+    let min = (lab[0] / 100) * minPercentage;
+    let max = (lab[0] / 100) * maxPercentage;
     
-    console.log(lStep)
-    
-    let offset = 9999;
-    for (let i=0; i < numColors; i++) {
-        let diff = lab[0] - range[i];
-        if (Math.abs(diff) < Math.abs(offset)) {
-            offset = diff;
-        }
-    }
-    return range.map(l => chroma.lab([l + offset, lab[1], lab[2]]));
+    const step = calculateStepValue(min, max*1.1, numColors)
+    let range = _range(min, max, step)
+
+    console.log(range, step)
+
+    const colors = range.map(l => chroma.lab([l, lab[1], lab[2]])).reverse()
+
+    return chroma.scale(colors)
+        .correctLightness(true)
+        .colors(numColors)
 }
 
 function calculateShadeRamp(name, baseColor, totalColors, minShadeFactor, maxShadeFactor, totalShades) {
     const result = []
-    const shadeFactorStep = calculateStepValue(minShadeFactor, maxShadeFactor, totalShades)
-    console.log(shadeFactorStep)
+    const colors = autoGradient(minShadeFactor, maxShadeFactor, baseColor, totalShades)
     
-    const genColors = autoGradient(baseColor, totalShades)
-    const stepsLeft = chroma.scale(genColors).correctLightness(true).colors(totalShades)
-
-    for (let i = totalShades - 1; i >= 0; i--) {
-        // result[i] = { hex: calculateColorShade(baseColor, minShadeFactor) }
-        result[i] = { hex: stepsLeft[i] }
-        minShadeFactor = shadeFactorStep + minShadeFactor
-    }
+    colors.forEach((color, index) => {
+        result[index] = { hex: color }
+    })
     return result.reverse()
 }
 
@@ -85,8 +81,8 @@ export const useMainStore = defineStore('main', {
             darkCheckColor: "#141414",
             countShades: 5,
             countTints: 4,
-            minShadeFactor: 1.5,
-            maxShadeFactor: 7.5,
+            minShadeFactor: 10,
+            maxShadeFactor: 90,
             minTintFactor: 2,
             maxTintFactor: 8
         },
@@ -120,7 +116,7 @@ export const useMainStore = defineStore('main', {
             return ramp
         },
         calculateRamp() {
-            const shades = calculateShadeRamp(this.settings.name, this.settings.baseColor, this.totalColors, this.settings.minShadeFactor/10, this.settings.maxShadeFactor/10, this.settings.countShades)
+            const shades = calculateShadeRamp(this.settings.name, this.settings.baseColor, this.totalColors, this.settings.minShadeFactor, this.settings.maxShadeFactor, this.settings.countShades)
             const base = shades.concat(generateBaseColorInfo(this.settings.baseColor))
             const tints = calculateTintRamp(this.settings.name, this.settings.baseColor, this.totalColors, this.settings.minTintFactor/10, this.settings.maxTintFactor/10, this.settings.countTints)
             
