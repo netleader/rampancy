@@ -8,16 +8,28 @@
     <div class="spacer"></div>
     <div class="contrast-wrapper">
       
-      <div class="contrast light foreground" :style="[color.contrastLight < maxAllowedContrast && !checkWithHighLuminance ? 'opacity: .3': '']">
-        <font-awesome-icon v-if="checkWithHighLuminance" :style="{ color: lightCheckColor }" class="icon" icon="fa-solid fa-check" />
+      <div class="contrast light foreground" :style="[lightLuminanceContrast <= maxAllowedLc ? 'opacity: .3': '']">
+        <font-awesome-icon v-if="lightLuminanceContrast >= maxAllowedLc" :style="{ color: lightCheckColor }" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: lightCheckColor }">Aa</div>
+        <div class="rating" :style="{ color: lightCheckColor }">{{ lightLuminanceContrast }}</div>
       </div>
       
-      <div class="contrast dark foreground" :style="[color.contrastDark < maxAllowedContrast ? 'opacity: .3': '']">
-        <font-awesome-icon v-if="color.contrastDark >= maxAllowedContrast" :style="{ color: darkCheckColor}" class="icon" icon="fa-solid fa-check" />
+      <div class="contrast dark foreground" :style="[darkLuminanceContrast <= maxAllowedLc ? 'opacity: .3': '']">
+        <font-awesome-icon v-if="darkLuminanceContrast >= maxAllowedLc" :style="{ color: darkCheckColor}" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: darkCheckColor }">Aa</div>
+        <div class="rating" :style="{ color: darkCheckColor }">{{ darkLuminanceContrast }}</div>
+      </div>
+
+      <div class="contrast light" :style="[lightBackgroundLuminanceContrast <= maxAllowedLc ? 'opacity: .3' : '', {backgroundColor: lightCheckColor}]">
+        <font-awesome-icon v-if="lightBackgroundLuminanceContrast >= maxAllowedLc" :style="{ color: color.hex }" class="icon" icon="fa-solid fa-check" />
+        <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
+        <div class="rating" :style="{ color: color.hex }">{{ lightBackgroundLuminanceContrast }}</div>
+      </div>
+
+      <div class="contrast dark" :style="[darkBackgroundLuminanceContrast <= maxAllowedLc ? 'opacity: .3' : '', {backgroundColor: darkCheckColor}]">
+        <font-awesome-icon v-if="darkBackgroundLuminanceContrast >= maxAllowedLc" :style="{ color: color.hex }" class="icon" icon="fa-solid fa-check" />
+        <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
+        <div class="rating" :style="{ color: color.hex }">{{ darkBackgroundLuminanceContrast }}</div>
       </div>
       
     </div>
@@ -26,22 +38,35 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { calcAPCA } from 'apca-w3';
 
-const maxAllowedContrast = 4.5
+const maxAllowedLc = 59
 const props = defineProps({
   color: Object,
   lightCheckColor: String,
   darkCheckColor: String
 })
 
+const lightLuminanceContrast = computed(() => {
+  const lc = Math.round(calcAPCA(props.lightCheckColor, props.color.hex))
+  return Math.abs(lc)
+})
+const lightBackgroundLuminanceContrast = computed(() => {
+  return Math.round(calcAPCA(props.color.hex, props.lightCheckColor))
+})
+
+const darkLuminanceContrast = computed(() => {
+  return Math.round(calcAPCA(props.darkCheckColor, props.color.hex))
+})
+
+const darkBackgroundLuminanceContrast = computed(() => {
+  const lc =  Math.round(calcAPCA(props.color.hex, props.darkCheckColor))
+  return Math.abs(lc)
+})
+
 const getForegroundColor = computed(() => {
-  return props.color.contrastLight >= props.color.contrastDark ? props.lightCheckColor : props.darkCheckColor
+  return lightLuminanceContrast.value >= maxAllowedLc ? props.lightCheckColor : props.darkCheckColor
 })
-
-const checkWithHighLuminance = computed(() => {
-  return (props.color.contrastLight >= maxAllowedContrast) || (props.color.luminance >= 15 && Math.round(props.color.lightness) <= 50)
-})
-
 </script>
 
 <style lang="scss" scoped>
@@ -74,7 +99,9 @@ const checkWithHighLuminance = computed(() => {
   align-items: center;
   justify-content: left;
   border-radius: 3px;
-  padding: 2px 6px;
+  padding: 2px 8px;
+  width: 55px;
+  height: 22px;
 
   &.foreground {
     border: 1px solid rgba(white, 10%);
@@ -82,7 +109,6 @@ const checkWithHighLuminance = computed(() => {
 
   .rating {
     font-size: 1rem;
-    line-height: 2;
   }
   
   & > .icon {

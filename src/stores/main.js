@@ -4,21 +4,11 @@ import _range from "lodash-es/_baseRange";
 
 const tinycolor = require("tinycolor2");
 
-function calculateColorTint(hex, tintFactor) {
-    const color = tinycolor(hex).toRgb()
-    const red = color.r + ((255 - color.r) * tintFactor)
-    const green = color.g + ((255 - color.g) * tintFactor)
-    const blue = color.b + ((255 - color.b) * tintFactor)
-    return tinycolor({r: red, g: green, b: blue}).toHexString()
-}
-
 function calculateStepValue(min, max, points) {
     return (max - min) / points
 }
 
 // https://github.com/gka/palettes/blob/master/src/PalettePreview.svelte
-
-
 function autoShades(minPercentage, maxPercentage, color, numColors) {
     const lab = chroma(color).lab();
     const min = (lab[0] / 100) * minPercentage;
@@ -82,14 +72,14 @@ export const useMainStore = defineStore('main', {
         settings: {
             name: "red",
             baseColor: "#f24822",
-            lightCheckColor: "#f4f4f4",
-            darkCheckColor: "#141414",
+            lightCheckColor: "#fff",
+            darkCheckColor: "#000",
             countShades: 5,
             countTints: 4,
-            minShadeFactor: 10,
+            minShadeFactor: 25,
             maxShadeFactor: 90,
-            minTintFactor: 10,
-            maxTintFactor: 80
+            minTintFactor: 20,
+            maxTintFactor: 125
         },
         colors: []
     }),
