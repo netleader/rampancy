@@ -118,7 +118,7 @@
 </template>
 
 <script setup>
-import { ref, computed, defineEmits } from 'vue'
+import { ref, defineEmits } from 'vue'
 import { useMainStore } from '@/stores/main'
 
 const mainStore = useMainStore()
