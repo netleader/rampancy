@@ -15,8 +15,13 @@ function createJson() {
     let output = []
     props.colors.forEach((color,index) => {
         output[index] = {
+            "id": color.id,
             "hex": color.hex,
-            "token": color.token
+            "token": color.token,
+            "contrastLightForeground": color.contrastLightForeground,
+            "contrastDarkForeground": color.contrastDarkForeground,
+            "contrastLightBackground": color.contrastLightBackground,
+            "contrastDarkBackground": color.contrastDarkBackground,
         }
     });
   return JSON.stringify(output, null, 2)
@@ -31,7 +36,7 @@ function createJson() {
     white-space: pre;
     width: 351px;
     min-height: 300px;
-    max-height: 450px;
+    max-height: 400px;
     overflow-y: scroll;
     border: 1px solid #282828;
     padding: 8px;

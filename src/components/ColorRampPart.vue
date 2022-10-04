@@ -8,28 +8,28 @@
     <div class="spacer"></div>
     <div class="contrast-wrapper">
       
-      <div class="contrast light foreground" :style="[lightLuminanceContrast <= maxAllowedLc ? 'opacity: .3': '']">
-        <font-awesome-icon v-if="lightLuminanceContrast >= maxAllowedLc" :style="{ color: lightCheckColor }" class="icon" icon="fa-solid fa-check" />
+      <div class="contrast light foreground" :style="[color.contrastLightForeground <= maxAllowedLc ? 'opacity: .3': '']">
+        <font-awesome-icon v-if="color.contrastLightForeground >= maxAllowedLc" :style="{ color: lightCheckColor }" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: lightCheckColor }">{{ lightLuminanceContrast }}</div>
+        <div class="rating" :style="{ color: lightCheckColor }">{{ color.contrastLightForeground }}</div>
       </div>
       
-      <div class="contrast dark foreground" :style="[darkLuminanceContrast <= maxAllowedLc ? 'opacity: .3': '']">
-        <font-awesome-icon v-if="darkLuminanceContrast >= maxAllowedLc" :style="{ color: darkCheckColor}" class="icon" icon="fa-solid fa-check" />
+      <div class="contrast dark foreground" :style="[color.contrastDarkForeground <= maxAllowedLc ? 'opacity: .3': '']">
+        <font-awesome-icon v-if="color.contrastDarkForeground >= maxAllowedLc" :style="{ color: darkCheckColor}" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: darkCheckColor }">{{ darkLuminanceContrast }}</div>
+        <div class="rating" :style="{ color: darkCheckColor }">{{ color.contrastDarkForeground }}</div>
       </div>
 
-      <div class="contrast light" :style="[lightBackgroundLuminanceContrast <= maxAllowedLc ? 'opacity: .3' : '', {backgroundColor: lightCheckColor}]">
-        <font-awesome-icon v-if="lightBackgroundLuminanceContrast >= maxAllowedLc" :style="{ color: color.hex }" class="icon" icon="fa-solid fa-check" />
+      <div class="contrast light" :style="[color.contrastLightBackground <= maxAllowedLc ? 'opacity: .3' : '', {backgroundColor: lightCheckColor}]">
+        <font-awesome-icon v-if="color.contrastLightBackground >= maxAllowedLc" :style="{ color: color.hex }" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: color.hex }">{{ lightBackgroundLuminanceContrast }}</div>
+        <div class="rating" :style="{ color: color.hex }">{{ color.contrastLightBackground }}</div>
       </div>
 
-      <div class="contrast dark" :style="[darkBackgroundLuminanceContrast <= maxAllowedLc ? 'opacity: .3' : '', {backgroundColor: darkCheckColor}]">
-        <font-awesome-icon v-if="darkBackgroundLuminanceContrast >= maxAllowedLc" :style="{ color: color.hex }" class="icon" icon="fa-solid fa-check" />
+      <div class="contrast dark" :style="[color.contrastDarkBackground <= maxAllowedLc ? 'opacity: .3' : '', {backgroundColor: darkCheckColor}]">
+        <font-awesome-icon v-if="color.contrastDarkBackground >= maxAllowedLc" :style="{ color: color.hex }" class="icon" icon="fa-solid fa-check" />
         <font-awesome-icon v-else class="icon icon-fail" icon="fa-solid fa-xmark" />
-        <div class="rating" :style="{ color: color.hex }">{{ darkBackgroundLuminanceContrast }}</div>
+        <div class="rating" :style="{ color: color.hex }">{{ color.contrastDarkBackground }}</div>
       </div>
       
     </div>
@@ -37,8 +37,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
-import { calcAPCA } from 'apca-w3';
+import { defineProps,computed } from 'vue'
 
 const maxAllowedLc = 59
 const props = defineProps({
@@ -47,25 +46,8 @@ const props = defineProps({
   darkCheckColor: String
 })
 
-const lightLuminanceContrast = computed(() => {
-  const lc = Math.round(calcAPCA(props.lightCheckColor, props.color.hex))
-  return Math.abs(lc)
-})
-const lightBackgroundLuminanceContrast = computed(() => {
-  return Math.round(calcAPCA(props.color.hex, props.lightCheckColor))
-})
-
-const darkLuminanceContrast = computed(() => {
-  return Math.round(calcAPCA(props.darkCheckColor, props.color.hex))
-})
-
-const darkBackgroundLuminanceContrast = computed(() => {
-  const lc =  Math.round(calcAPCA(props.color.hex, props.darkCheckColor))
-  return Math.abs(lc)
-})
-
 const getForegroundColor = computed(() => {
-  return lightLuminanceContrast.value >= maxAllowedLc ? props.lightCheckColor : props.darkCheckColor
+  return props.color.contrastLightForeground >= maxAllowedLc ? props.lightCheckColor : props.darkCheckColor
 })
 </script>
 

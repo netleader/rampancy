@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { calcAPCA } from 'apca-w3';
 import chroma from "chroma-js";
 import _range from "lodash-es/_baseRange";
 import ColorSpaces from '../enums/colorSpaces';
@@ -93,7 +94,6 @@ function getTints(colorSpace, minPercentage, maxPercentage, color, numColors) {
         .colors(numColors)
 }
 
-
 function calculateShadeRamp(colorSpace, baseColor, minShadeFactor, maxShadeFactor, totalShades) {
     const result = []
     const colors = getShades(colorSpace, minShadeFactor, maxShadeFactor, baseColor, totalShades)
@@ -132,7 +132,7 @@ export const useMainStore = defineStore('main', {
             tintsColorSpace: "hsl",
             minShadeFactor: 43,
             maxShadeFactor: 96,
-            minTintFactor: 28,
+            minTintFactor: 58,
             maxTintFactor: 90,
             maxTintFactorScale: 200
         },
@@ -146,6 +146,10 @@ export const useMainStore = defineStore('main', {
                 color.token = `Color.${this.settings.name}.${color.id}`
                 color.lightness = chroma(color.hex).hsl()[2] * 100
                 color.saturation = chroma(color.hex).hsl()[1] * 100
+                color.contrastLightForeground = Math.abs(Math.round(calcAPCA(this.settings.lightCheckColor, color.hex)))
+                color.contrastDarkForeground = Math.round(calcAPCA(this.settings.darkCheckColor, color.hex))
+                color.contrastLightBackground = Math.round(calcAPCA(color.hex, this.settings.lightCheckColor))
+                color.contrastDarkBackground = Math.abs(Math.round(calcAPCA(color.hex, this.settings.darkCheckColor)))
                 totalColorCount--
             });
             return ramp
