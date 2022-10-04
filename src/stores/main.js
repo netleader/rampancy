@@ -50,11 +50,13 @@ function getTints(colorSpace, minPercentage, maxPercentage, color, numColors) {
     let chromaColor = chroma(color)
     let lightness = null
     let colors = null
+    let scale = 100
 
     switch (colorSpace) {
         case ColorSpaces.HSL:
             chromaColor = chromaColor.hsl();
             lightness = chromaColor[2]
+            scale = 1
             break;
 
         case ColorSpaces.LAB:
@@ -64,13 +66,8 @@ function getTints(colorSpace, minPercentage, maxPercentage, color, numColors) {
     }
 
 
-    let min = lightness + ((1 - lightness) / 100 * minPercentage)
-    let max = lightness + ((1 - lightness) / 100 * maxPercentage)
-
-
-    console.log("lightness: " + lightness)
-    console.log("min: " + min)
-    console.log("max: " + max)
+    const min = lightness + ((scale - lightness) / 100 * minPercentage)
+    const max = lightness + ((scale - lightness) / 100 * maxPercentage)
 
     const step = (max - min) / numColors
     let range = []
@@ -155,8 +152,8 @@ export const useMainStore = defineStore('main', {
             tintsColorSpace: "lab",
             minShadeFactor: 25,
             maxShadeFactor: 90,
-            minTintFactor: 20,
-            maxTintFactor: 100,
+            minTintFactor: 25,
+            maxTintFactor: 90,
             maxTintFactorScale: 200
         },
         colors: []
