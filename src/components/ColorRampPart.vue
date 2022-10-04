@@ -1,6 +1,6 @@
 <template>
   <div class="color" :style="{ backgroundColor: color.hex}">
-    <div class="wrapper" :style="{color: getForegroundColor}">
+    <div class="wrapper" :style="{color: color.foregroundColor}">
       <div class="id">{{ color.id }}</div>
       <div class="hex">{{ color.hex }}</div>
       <div class="token">{{ color.token }}</div>
@@ -37,18 +37,15 @@
 </template>
 
 <script setup>
-import { defineProps,computed } from 'vue'
+import { defineProps } from 'vue'
 
 const maxAllowedLc = 59
-const props = defineProps({
+defineProps({
   color: Object,
   lightCheckColor: String,
   darkCheckColor: String
 })
 
-const getForegroundColor = computed(() => {
-  return props.color.contrastLightForeground >= maxAllowedLc ? props.lightCheckColor : props.darkCheckColor
-})
 </script>
 
 <style lang="scss" scoped>

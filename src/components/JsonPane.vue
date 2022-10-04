@@ -2,10 +2,14 @@
     <div class="container">
         {{ createJson() }}
     </div>
-  </template>
+</template>
   
-  <script setup>
-  import { defineProps } from "vue";
+<script setup>
+  import { defineProps, ref } from "vue";
+  import { useMainStore } from '@/stores/main'
+
+  const mainStore = useMainStore()
+  const settings = ref(mainStore.settings)
   
   const props = defineProps({
     colors: Object
@@ -18,6 +22,7 @@ function createJson() {
             "id": color.id,
             "hex": color.hex,
             "token": color.token,
+            "foregroundColor": color.foregroundColor,
             "contrastLightForeground": color.contrastLightForeground,
             "contrastDarkForeground": color.contrastDarkForeground,
             "contrastLightBackground": color.contrastLightBackground,

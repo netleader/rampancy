@@ -119,6 +119,13 @@ function generateBaseColorInfo(baseColor) {
     }
 }
 
+function getTextColor(color, lightCheckColor, darkCheckColor) {
+    const arr = [color.contrastLightForeground, color.contrastDarkForeground];
+    const max = Math.max(...arr);
+    const index = arr.indexOf(max);
+    return index == 0 ? lightCheckColor : darkCheckColor
+  }
+
 export const useMainStore = defineStore('main', {
     state: () => ({
         settings: {
@@ -150,6 +157,7 @@ export const useMainStore = defineStore('main', {
                 color.contrastDarkForeground = Math.round(calcAPCA(this.settings.darkCheckColor, color.hex))
                 color.contrastLightBackground = Math.round(calcAPCA(color.hex, this.settings.lightCheckColor))
                 color.contrastDarkBackground = Math.abs(Math.round(calcAPCA(color.hex, this.settings.darkCheckColor)))
+                color.foregroundColor = getTextColor(color, this.settings.lightCheckColor, this.settings.darkCheckColor)
                 totalColorCount--
             });
             return ramp
