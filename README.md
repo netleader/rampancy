@@ -1,4 +1,4 @@
-# color-manager
+# rampancy
 
 ## Project setup
 ```
