@@ -24,7 +24,7 @@ import HeaderPane from "./components/HeaderPane"
 import SettingsPane from "./components/SettingsPane"
 import ColorRampPane from "@/components/ColorRampPart"
 import CurvePane from "@/components/CurvePane"
-import JsonPane from "@/components/JsonPane"
+import JsonPane from "@/components/JsonPane";
 import { useMainStore } from '@/stores/main'
 import { ref } from "vue";
 
@@ -90,13 +90,13 @@ button, input, optgroup, select, textarea {
 #column-wrapper {
   display: flex;
   flex-direction: row;
-  height: 100%;
+  height: calc(100% - 125px);
   padding: 12px;
 }
 .column {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1 1 auto;
   margin-right: 20px;
   padding-top: 12px;
   &.settings {

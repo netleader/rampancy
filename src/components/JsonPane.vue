@@ -1,22 +1,39 @@
 <template>
     <div class="container">
-        dcd
+        {{ createJson() }}
     </div>
   </template>
   
   <script setup>
   import { defineProps } from "vue";
   
-  defineProps({
+  const props = defineProps({
     colors: Object
   })
+
+function createJson() {
+    let output = []
+    props.colors.forEach((color,index) => {
+        output[index] = {
+            "hex": color.hex,
+            "token": color.token
+        }
+    });
+  return JSON.stringify(output, null, 2)
+}
   
   </script>
   
   <style lang="scss" scoped>
 
-  
   .container {
-  
+    margin-top: 40px;
+    white-space: pre;
+    width: 351px;
+    min-height: 300px;
+    max-height: 450px;
+    overflow-y: scroll;
+    border: 1px solid #282828;
+    padding: 8px;
   }
   </style>

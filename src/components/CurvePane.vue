@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <div class="grid-wrapper">
       <div class="grid">
         <div 
@@ -42,9 +42,6 @@ function adjustPosition(pos) {
 $grid-width: 351px;
 $grid-box-size: 35px;
 
-.container {
-
-}
 .bottom {
   width: $grid-width;
   user-select: none;
