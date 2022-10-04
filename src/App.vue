@@ -14,6 +14,7 @@
     </div>
     <div class="column curve" v-if="isCalculated">
       <curve-pane :colors="mainStore.colors" />
+      <json-pane :colors="mainStore.colors" />
     </div>
   </div>
 </template>
@@ -23,6 +24,7 @@ import HeaderPane from "./components/HeaderPane"
 import SettingsPane from "./components/SettingsPane"
 import ColorRampPane from "@/components/ColorRampPart"
 import CurvePane from "@/components/CurvePane"
+import JsonPane from "@/components/JsonPane"
 import { useMainStore } from '@/stores/main'
 import { ref } from "vue";
 
