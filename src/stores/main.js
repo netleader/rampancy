@@ -28,7 +28,7 @@ function getShades(colorSpace, minPercentage, maxPercentage, color, numColors) {
 
     const min = (lightness / 100) * minPercentage;
     const max = (lightness / 100) * maxPercentage;
-    const step = calculateStepValue(min, max * 1.1, numColors)
+    const step = calculateStepValue(min, max, numColors)
     const range = _range(min, max, step)
 
     switch (colorSpace) {
@@ -94,26 +94,6 @@ function getTints(colorSpace, minPercentage, maxPercentage, color, numColors) {
 }
 
 
-
-function autoTints(minPercentage, maxPercentage, color, numColors) {
-    const lab = chroma(color).lab();
-    const min = lab[0] + ((100 - lab[0]) / 100 * minPercentage)
-    const max = lab[0] + ((100 - lab[0]) / 100 * maxPercentage)
-
-    const step = (max - min) / numColors
-    let range = []
-    let previewsStep = 0
-    for (let i = 0; i <= numColors; i++ ) {
-        range.push(min + previewsStep)
-        previewsStep = previewsStep + step
-    }
-    const colors = range.map(l => chroma.lab([l, lab[1], lab[2]])).reverse()
-
-    return chroma.scale(colors)
-        .correctLightness(true)
-        .colors(numColors)
-}
-
 function calculateShadeRamp(colorSpace, baseColor, minShadeFactor, maxShadeFactor, totalShades) {
     const result = []
     const colors = getShades(colorSpace, minShadeFactor, maxShadeFactor, baseColor, totalShades)
@@ -150,7 +130,7 @@ export const useMainStore = defineStore('main', {
             countTints: 4,
             shadesColorSpace: "lab",
             tintsColorSpace: "lab",
-            minShadeFactor: 25,
+            minShadeFactor: 10,
             maxShadeFactor: 90,
             minTintFactor: 25,
             maxTintFactor: 90,

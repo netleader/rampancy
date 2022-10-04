@@ -90,7 +90,7 @@
         <div class="form-input-col">
           <input
               v-model="settings.maxShadeFactor" v-on:input="requestCalculation"
-              type="range" min="1" max="100" step="1" class="slider" id="inputMaxShadeFactor"> 
+              type="range" :min="Number(settings.minShadeFactor) + 1" max="100" step="1" class="slider" id="inputMaxShadeFactor"> 
           <div class="slider-value">{{ settings.maxShadeFactor }}</div>
         </div>
       </div>
