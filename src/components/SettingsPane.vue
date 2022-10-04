@@ -2,7 +2,6 @@
   <form @submit.prevent="requestCalculation">
     <div class="section-wrapper">
       <div class="section-title">Generic</div>
-  
       <div class="row">
         <label for="inputName" class="col-form-label">Name</label>
         <div class="form-input-col">
@@ -11,7 +10,6 @@
               type="text" class="form-control" id="inputName" spellcheck="false" autocomplete="off">
         </div>
       </div>
-  
     </div>
     
     <div class="section-wrapper">
@@ -49,7 +47,26 @@
     </div>
     
     <div class="section-wrapper">
-      <div class="section-title">Shades</div>
+
+      <div class="row">
+        <div class="section-title title-col">Shades</div>
+        <div class="form-input-col">
+
+          <div class="form-check form-check-inline">
+            <input v-model="settings.shadesColorSpace" value="lab"
+             class="form-check-input" type="radio" name="shadesColorSpace" id="shadesColorSpaceLAB">
+            <label class="form-check-label" for="shadesColorSpaceLAB">LAB</label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input  v-model="settings.shadesColorSpace" value="hsl"
+              class="form-check-input" type="radio" name="shadesColorSpace" id="shadesColorSpaceHSL">
+            <label class="form-check-label" for="shadesColorSpaceHSL">HSL</label>
+          </div>
+
+        </div>
+      </div>
+
       <div class="row">
         <label for="inputAmountTints" class="col-form-label">Count</label>
         <div class="form-input-col">
@@ -80,7 +97,25 @@
     </div>
 
     <div class="section-wrapper">
-      <div class="section-title">Tints</div>
+
+      <div class="row">
+        <div class="section-title title-col">Tints</div>
+        <div class="form-input-col">
+
+          <div class="form-check form-check-inline">
+            <input v-model="settings.tintsColorSpace" value="lab"
+              class="form-check-input" type="radio" name="tintsColorSpace" id="tintsColorSpaceLAB">
+            <label class="form-check-label" for="tintsColorSpaceLAB">LAB</label>
+          </div>
+
+          <div class="form-check form-check-inline">
+            <input v-model="settings.tintsColorSpace" value="hsl"
+              class="form-check-input" type="radio" name="tintsColorSpace" id="tintsColorSpaceHSL">
+            <label class="form-check-label" for="tintsColorSpaceHSL">HSL</label>
+          </div>
+
+        </div>
+      </div>
 
       <div class="row">
         <label for="inputAmountTints" class="col-form-label">Count</label>
@@ -107,7 +142,7 @@
         <div class="form-input-col">
           <input
               v-model="settings.maxTintFactor" v-on:input="requestCalculation"
-              type="range" min="0" max="200" step="1" class="slider" id="inputMaxTintFactor">
+              type="range" min="0" :max="settings.maxTintFactorScale" step="1" class="slider" id="inputMaxTintFactor">
           <div class="slider-value">{{ settings.maxTintFactor }}</div>
         </div>
       </div>
@@ -151,6 +186,15 @@ input[type="color"]::-webkit-color-swatch-wrapper {
 input[type="color"]::-webkit-color-swatch {
   border: none;
 }
+.form-check {
+  display: flex;
+  &-inline {
+    margin-right: 1rem;
+  }
+  & > .form-check-label {
+    margin-left: 8px;
+  }
+}
 
 .btn {
   border: none;
@@ -176,7 +220,9 @@ input[type="color"]::-webkit-color-swatch {
   font-size: 1.4rem;
   text-transform: uppercase;
   font-weight: 300;
-  margin-bottom: 8px;
+}
+.title-col {
+  width: 50%;
 }
 .row {
   display: flex;
