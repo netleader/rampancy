@@ -258,7 +258,6 @@ input[type="color"]::-webkit-color-swatch {
   width: 100%;
   line-height: 1.5;
   padding: .375rem .75rem;
-  text-transform: lowercase;
 
   color: #ccc;
   background-color: transparent;

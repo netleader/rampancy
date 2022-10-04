@@ -140,7 +140,7 @@ const getForegroundColor = computed(() => {
   }
   & > .hex, & > .token {
     font-size: 10px;
-    text-transform: lowercase;
+    text-transform: capitalize;
     line-height: 1.1;
     opacity: 0.6;
   }

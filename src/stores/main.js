@@ -122,17 +122,17 @@ function generateBaseColorInfo(baseColor) {
 export const useMainStore = defineStore('main', {
     state: () => ({
         settings: {
-            name: "red",
-            baseColor: "#f24822",
+            name: "Purple",
+            baseColor: "#730ff8",
             lightCheckColor: "#ffffff",
             darkCheckColor: "#000000",
             countShades: 5,
             countTints: 4,
-            shadesColorSpace: "lab",
-            tintsColorSpace: "lab",
-            minShadeFactor: 10,
-            maxShadeFactor: 90,
-            minTintFactor: 25,
+            shadesColorSpace: "hsl",
+            tintsColorSpace: "hsl",
+            minShadeFactor: 43,
+            maxShadeFactor: 96,
+            minTintFactor: 28,
             maxTintFactor: 90,
             maxTintFactorScale: 200
         },
@@ -143,7 +143,7 @@ export const useMainStore = defineStore('main', {
             let totalColorCount = ramp.length
             ramp.forEach ((color) => {
                 color.id = totalColorCount * 100
-                color.token = `color-${this.settings.name}-${color.id}`
+                color.token = `Color.${this.settings.name}.${color.id}`
                 color.lightness = chroma(color.hex).hsl()[2] * 100
                 color.saturation = chroma(color.hex).hsl()[1] * 100
                 totalColorCount--
