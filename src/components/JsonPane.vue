@@ -5,11 +5,7 @@
 </template>
   
 <script setup>
-  import { defineProps, ref } from "vue";
-  import { useMainStore } from '@/stores/main'
-
-  const mainStore = useMainStore()
-  const settings = ref(mainStore.settings)
+  import { defineProps } from "vue";
   
   const props = defineProps({
     colors: Object
