@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        {{ createJson() }}
+        {{ JSON.stringify(props.colors, null, 2) }}
     </div>
 </template>
   
@@ -14,23 +14,6 @@
   const props = defineProps({
     colors: Object
   })
-
-function createJson() {
-    let output = []
-    props.colors.forEach((color,index) => {
-        output[index] = {
-            "id": color.id,
-            "hex": color.hex,
-            "token": color.token,
-            "foregroundColor": color.foregroundColor,
-            "contrastLightForeground": color.contrastLightForeground,
-            "contrastDarkForeground": color.contrastDarkForeground,
-            "contrastLightBackground": color.contrastLightBackground,
-            "contrastDarkBackground": color.contrastDarkBackground,
-        }
-    });
-  return JSON.stringify(output, null, 2)
-}
   
   </script>
   
