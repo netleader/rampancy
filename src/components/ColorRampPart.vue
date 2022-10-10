@@ -119,9 +119,11 @@ defineProps({
   }
   & > .hex, & > .token {
     font-size: 10px;
-    text-transform: capitalize;
     line-height: 1.1;
     opacity: 0.6;
+  }
+  & > .token {
+    text-transform: capitalize;
   }
 }
 </style>
