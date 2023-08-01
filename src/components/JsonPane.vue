@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        {{ JSON.stringify(props.colors, null, 2) }}
+      {{ createJson() }}
     </div>
 </template>
   
@@ -10,6 +10,18 @@
   const props = defineProps({
     colors: Object
   })
+
+  function createJson() {
+    let json = { 
+      [props.colors[0].name]: {}
+    }
+    props.colors.forEach(color => {
+      json[color.name][color.id] = {
+        'value': color.hex,
+        'type': 'color'
+    }});
+    return JSON.stringify(json, null, 2)
+  }
   
   </script>
   

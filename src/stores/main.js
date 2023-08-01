@@ -129,7 +129,7 @@ function getTextColor(color, lightCheckColor, darkCheckColor) {
 export const useMainStore = defineStore('main', {
     state: () => ({
         settings: {
-            name: "Purple",
+            name: "purple",
             baseColor: "#730ff8",
             lightCheckColor: "#ffffff",
             darkCheckColor: "#000000",
@@ -150,7 +150,8 @@ export const useMainStore = defineStore('main', {
             let totalColorCount = ramp.length
             ramp.forEach ((color) => {
                 color.id = totalColorCount * 100
-                color.token = `Color.${this.settings.name}.${color.id}`
+                color.token = `color.${this.settings.name}.${color.id}`
+                color.name = this.settings.name
                 color.lightness = chroma(color.hex).hsl()[2] * 100
                 color.saturation = chroma(color.hex).hsl()[1] * 100
                 color.contrastLightForeground = Math.abs(Math.round(calcAPCA(this.settings.lightCheckColor, color.hex)))
@@ -163,7 +164,6 @@ export const useMainStore = defineStore('main', {
             return ramp
         },
         calculateRamp() {
-
             if(this.settings.tintsColorSpace == ColorSpaces.HSL) {
                 this.settings.maxTintFactorScale = 100
             } else {

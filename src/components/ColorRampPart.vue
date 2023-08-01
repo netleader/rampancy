@@ -39,7 +39,7 @@
 <script setup>
 import { defineProps } from 'vue'
 
-const maxAllowedLc = 59
+const maxAllowedLc = 54
 defineProps({
   color: Object,
   lightCheckColor: String,
@@ -121,9 +121,6 @@ defineProps({
     font-size: 10px;
     line-height: 1.1;
     opacity: 0.6;
-  }
-  & > .token {
-    text-transform: capitalize;
   }
 }
 </style>
